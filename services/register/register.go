@@ -49,7 +49,7 @@ func main() {
 }
 
 func connectToDb(conn string) *sql.DB {
-	level.Info(logger).Log("msg", "Connecting to DB")
+	level.Info(logger).Log("msg", "Connecting to DB", conn)
 	db, err := sql.Open("mysql", conn)
 	level.Info(logger).Log("msg", "DB response ", err)
 	if err != nil {
@@ -62,7 +62,7 @@ func connectToDb(conn string) *sql.DB {
 func getHTTPPort() string {
 	httpPort, ok := os.LookupEnv("HTTP_PORT")
 	if !ok {
-		httpPort = "8080"
+		httpPort = "8000"
 	}
 	return ":" + httpPort
 }
@@ -78,11 +78,11 @@ func getConnectionString() string {
 	}
 	host, ok := os.LookupEnv("MYSQL_HOST")
 	if !ok {
-		host = "localhost"
+		host = "mysql-dp"
 	}
 	port, ok := os.LookupEnv("MYSQL_PORT")
 	if !ok {
-		port = "33016"
+		port = "3306"
 	}
 	db, ok := os.LookupEnv("MYSQL_DB")
 	if !ok {
