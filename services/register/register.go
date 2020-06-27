@@ -88,7 +88,7 @@ func getConnectionString() string {
 	if !ok {
 		db = "donate"
 	}
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, db)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, host, port, db)
 }
 
 func setLogger() log.Logger {

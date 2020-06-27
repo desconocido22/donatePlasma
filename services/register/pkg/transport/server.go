@@ -13,14 +13,47 @@ import (
 // NewHTTPServer Create new HTTP server instance
 func NewHTTPServer(ctx context.Context, endpoints endpoints.Endpoints) http.Handler {
 	r := mux.NewRouter()
-	//r.Use(middleware)
-	r.Methods("POST").Path("/api/register/recipient").Handler(httptransport.NewServer(
+	r.Use(middleware)
+	setRecipientPaths(r, endpoints)
+
+	return r
+}
+
+func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
+	// Create a recipient record
+	r.Methods(http.MethodPost).Path("/api/register/recipient").Handler(httptransport.NewServer(
 		endpoints.CreateRecipient,
 		reqres.DecodeCreateRecipientRequest,
 		reqres.EncodeResponse,
 	))
 
-	return r
+	// Get a list of all recipients
+	r.Methods(http.MethodGet).Path("/api/register/recipient").Handler(httptransport.NewServer(
+		endpoints.GetRecipients,
+		reqres.DecodeProtectedEmptyRequest,
+		reqres.EncodeResponse,
+	))
+
+	// Get a list of public recipients
+	r.Methods(http.MethodGet).Path("/api/register/recipient/public").Handler(httptransport.NewServer(
+		endpoints.GetPublicRecipients,
+		reqres.DecodeEmptyRequest,
+		reqres.EncodeResponse,
+	))
+
+	// Update a recipient
+	r.Methods(http.MethodPut).Path("/api/register/recipient/{id}").Handler(httptransport.NewServer(
+		endpoints.UpdateRecipient,
+		reqres.DecodeUpdateRecipientRequest,
+		reqres.EncodeResponse,
+	))
+
+	// Verify/Unverify a recipient
+	r.Methods(http.MethodPatch).Path("/api/register/recipient/{id}/verify").Handler(httptransport.NewServer(
+		endpoints.VerifyRecipient,
+		reqres.DecodeVerifyRecipientRequest,
+		reqres.EncodeResponse,
+	))
 }
 
 func middleware(next http.Handler) http.Handler {
