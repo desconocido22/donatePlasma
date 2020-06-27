@@ -16,6 +16,7 @@ type Repository interface {
 	CreateDonor(ctx context.Context, donor Donor) (*Donor, error)
 	GetDonorList(ctx context.Context, publicOnly bool) (*[]Donor, error)
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
+	PublicRecipient(ctx context.Context, recipientID int64, verified bool) error
 }
 
 type repository struct {
@@ -86,10 +87,22 @@ func (repo *repository) UpdateRecipient(ctx context.Context, recipient Recipient
 	return recipient, nil
 }
 
-// UpdateRecipient update a recipient
+// UpdateRecipient verify a recipient
 func (repo *repository) VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error {
 	sql := `
 	UPDATE recipient SET verified = ? WHERE id = ?;`
+	stmt, err := repo.db.Prepare(sql)
+	_, err = stmt.ExecContext(ctx, verified, recipientID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// PublicRecipient set public flag for a recipient
+func (repo *repository) PublicRecipient(ctx context.Context, recipientID int64, verified bool) error {
+	sql := `
+	UPDATE recipient SET public = ? WHERE id = ?;`
 	stmt, err := repo.db.Prepare(sql)
 	_, err = stmt.ExecContext(ctx, verified, recipientID)
 	if err != nil {

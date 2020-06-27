@@ -54,6 +54,13 @@ func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodeVerifyRecipientRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Set as public or not public a recipient
+	r.Methods(http.MethodPatch).Path("/api/register/recipient/{id}/public").Handler(httptransport.NewServer(
+		endpoints.PublicRecipient,
+		reqres.DecodePublicRecipientRequest,
+		reqres.EncodeResponse,
+	))
 }
 
 func middleware(next http.Handler) http.Handler {

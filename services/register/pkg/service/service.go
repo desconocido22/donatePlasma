@@ -12,6 +12,7 @@ type Service interface {
 	GetRecipientList(ctx context.Context, publicOnly bool) ([]Recipient, error)
 	UpdateRecipient(ctx context.Context, recipient Recipient) (Recipient, error)
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
+	PublicRecipient(ctx context.Context, recipientID int64, verified bool) error
 }
 
 type service struct {
@@ -56,5 +57,13 @@ func (s service) VerifyRecipient(ctx context.Context, recipientID int64, verifie
 
 	logger.Log("msg", "Verifiying Recipient")
 	err := s.repository.VerifyRecipient(ctx, recipientID, verified)
+	return err
+}
+
+func (s service) PublicRecipient(ctx context.Context, recipientID int64, verified bool) error {
+	logger := log.With(s.logger, "msg", "PublicRecipient")
+
+	logger.Log("msg", "Setting public Recipient")
+	err := s.repository.PublicRecipient(ctx, recipientID, verified)
 	return err
 }
