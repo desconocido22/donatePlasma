@@ -68,6 +68,13 @@ func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodeDeleteRecipientRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Activate a recipient
+	r.Methods(http.MethodPatch).Path("/api/register/recipient/{id}/activate").Handler(httptransport.NewServer(
+		endpoints.ActivateRecipient,
+		reqres.DecodeActivateRecipientRequest,
+		reqres.EncodeResponse,
+	))
 }
 
 func middleware(next http.Handler) http.Handler {

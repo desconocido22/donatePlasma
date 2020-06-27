@@ -51,16 +51,20 @@ type VerifyRecipientResquest struct {
 	Verified bool  `json:"verified"`
 }
 
-// PublicRecipientResquest vefiry recipient request
+// PublicRecipientResquest public recipient request
 type PublicRecipientResquest struct {
 	ID     int64 `json:"id,omitempty"`
 	Public bool  `json:"public"`
 }
 
-// PublicRecipientResquest vefiry recipient request
+// DeleteRecipientResquest delete recipient request
 type DeleteRecipientResquest struct {
-	ID     int64 `json:"id,omitempty"`
-	Public bool  `json:"public"`
+	ID int64 `json:"id,omitempty"`
+}
+
+// ActivateRecipientResquest activate recipient request
+type ActivateRecipientResquest struct {
+	ID int64 `json:"id,omitempty"`
 }
 
 // DecodeCreateRecipientRequest decode create recipient request
@@ -142,6 +146,21 @@ func DecodeDeleteRecipientRequest(ctx context.Context, r *http.Request) (interfa
 		return nil, errors.New("Invalid access")
 	}
 	var req DeleteRecipientResquest
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["id"], 10, 32)
+	if err != nil {
+		return nil, errors.New("Invalid recipient ID")
+	}
+	req.ID = id
+	return req, nil
+}
+
+// DecodeActivateRecipientRequest decode activate recipient request
+func DecodeActivateRecipientRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	if !validateAPIKey(r) {
+		return nil, errors.New("Invalid access")
+	}
+	var req ActivateRecipientResquest
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 32)
 	if err != nil {

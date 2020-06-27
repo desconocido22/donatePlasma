@@ -19,6 +19,7 @@ type Repository interface {
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
 	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
 	DeleteRecipient(ctx context.Context, recipientID int64) error
+	ActivateRecipient(ctx context.Context, recipientID int64) error
 }
 
 type repository struct {
@@ -119,6 +120,18 @@ func (repo *repository) DeleteRecipient(ctx context.Context, recipientID int64) 
 	UPDATE recipient SET deleted_at = ? WHERE id = ?;`
 	stmt, err := repo.db.Prepare(sql)
 	_, err = stmt.ExecContext(ctx, time.Now(), recipientID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ActivateRecipient set activate a recipient
+func (repo *repository) ActivateRecipient(ctx context.Context, recipientID int64) error {
+	sql := `
+	UPDATE recipient SET deleted_at = null WHERE id = ?;`
+	stmt, err := repo.db.Prepare(sql)
+	_, err = stmt.ExecContext(ctx, recipientID)
 	if err != nil {
 		return err
 	}

@@ -14,6 +14,7 @@ type Service interface {
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
 	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
 	DeleteRecipient(ctx context.Context, recipientID int64) error
+	ActivateRecipient(ctx context.Context, recipientID int64) error
 }
 
 type service struct {
@@ -74,5 +75,13 @@ func (s service) DeleteRecipient(ctx context.Context, recipientID int64) error {
 
 	logger.Log("msg", "Deleting Recipient")
 	err := s.repository.DeleteRecipient(ctx, recipientID)
+	return err
+}
+
+func (s service) ActivateRecipient(ctx context.Context, recipientID int64) error {
+	logger := log.With(s.logger, "msg", "ActivateRecipient")
+
+	logger.Log("msg", "Activating Recipient")
+	err := s.repository.ActivateRecipient(ctx, recipientID)
 	return err
 }
