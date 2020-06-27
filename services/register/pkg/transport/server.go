@@ -61,6 +61,13 @@ func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodePublicRecipientRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Delete a recipient
+	r.Methods(http.MethodDelete).Path("/api/register/recipient/{id}").Handler(httptransport.NewServer(
+		endpoints.DeleteRecipient,
+		reqres.DecodeDeleteRecipientRequest,
+		reqres.EncodeResponse,
+	))
 }
 
 func middleware(next http.Handler) http.Handler {

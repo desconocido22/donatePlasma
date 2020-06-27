@@ -17,6 +17,7 @@ type Endpoints struct {
 	UpdateRecipient     endpoint.Endpoint
 	VerifyRecipient     endpoint.Endpoint
 	PublicRecipient     endpoint.Endpoint
+	DeleteRecipient     endpoint.Endpoint
 }
 
 // MakeEndpoints create endpoints
@@ -28,6 +29,7 @@ func MakeEndpoints(s service.Service) Endpoints {
 		UpdateRecipient:     makeUpdateRecipientEndpoint(s),
 		VerifyRecipient:     makeVerifyRecipientEndpoint(s),
 		PublicRecipient:     makePublicRecipientEndpoint(s),
+		DeleteRecipient:     makeDeleteRecipientEndpoint(s),
 	}
 }
 
@@ -109,6 +111,22 @@ func makePublicRecipientEndpoint(s service.Service) endpoint.Endpoint {
 		}
 
 		err := s.PublicRecipient(ctx, req.ID, req.Public)
+		ok = (err == nil)
+		return reqres.OkErrorResponse{
+			Ok:  ok,
+			Err: err,
+		}, err
+	}
+}
+
+func makeDeleteRecipientEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req, ok := request.(reqres.DeleteRecipientResquest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		err := s.DeleteRecipient(ctx, req.ID)
 		ok = (err == nil)
 		return reqres.OkErrorResponse{
 			Ok:  ok,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strconv"
+	"time"
 
 	"github.com/go-kit/kit/log"
 )
@@ -16,7 +17,8 @@ type Repository interface {
 	CreateDonor(ctx context.Context, donor Donor) (*Donor, error)
 	GetDonorList(ctx context.Context, publicOnly bool) (*[]Donor, error)
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
-	PublicRecipient(ctx context.Context, recipientID int64, verified bool) error
+	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
+	DeleteRecipient(ctx context.Context, recipientID int64) error
 }
 
 type repository struct {
@@ -100,11 +102,23 @@ func (repo *repository) VerifyRecipient(ctx context.Context, recipientID int64, 
 }
 
 // PublicRecipient set public flag for a recipient
-func (repo *repository) PublicRecipient(ctx context.Context, recipientID int64, verified bool) error {
+func (repo *repository) PublicRecipient(ctx context.Context, recipientID int64, public bool) error {
 	sql := `
 	UPDATE recipient SET public = ? WHERE id = ?;`
 	stmt, err := repo.db.Prepare(sql)
-	_, err = stmt.ExecContext(ctx, verified, recipientID)
+	_, err = stmt.ExecContext(ctx, public, recipientID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// DeleteRecipient set delete a recipient
+func (repo *repository) DeleteRecipient(ctx context.Context, recipientID int64) error {
+	sql := `
+	UPDATE recipient SET deleted_at = ? WHERE id = ?;`
+	stmt, err := repo.db.Prepare(sql)
+	_, err = stmt.ExecContext(ctx, time.Now(), recipientID)
 	if err != nil {
 		return err
 	}

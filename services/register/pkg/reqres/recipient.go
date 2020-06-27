@@ -57,6 +57,12 @@ type PublicRecipientResquest struct {
 	Public bool  `json:"public"`
 }
 
+// PublicRecipientResquest vefiry recipient request
+type DeleteRecipientResquest struct {
+	ID     int64 `json:"id,omitempty"`
+	Public bool  `json:"public"`
+}
+
 // DecodeCreateRecipientRequest decode create recipient request
 func DecodeCreateRecipientRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var req CreateRecipientRequest
@@ -121,6 +127,21 @@ func DecodePublicRecipientRequest(ctx context.Context, r *http.Request) (interfa
 	if err != nil {
 		return nil, err
 	}
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["id"], 10, 32)
+	if err != nil {
+		return nil, errors.New("Invalid recipient ID")
+	}
+	req.ID = id
+	return req, nil
+}
+
+// DecodeDeleteRecipientRequest decode delete recipient request
+func DecodeDeleteRecipientRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	if !validateAPIKey(r) {
+		return nil, errors.New("Invalid access")
+	}
+	var req DeleteRecipientResquest
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 32)
 	if err != nil {

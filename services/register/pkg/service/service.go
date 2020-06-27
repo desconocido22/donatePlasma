@@ -12,7 +12,8 @@ type Service interface {
 	GetRecipientList(ctx context.Context, publicOnly bool) ([]Recipient, error)
 	UpdateRecipient(ctx context.Context, recipient Recipient) (Recipient, error)
 	VerifyRecipient(ctx context.Context, recipientID int64, verified bool) error
-	PublicRecipient(ctx context.Context, recipientID int64, verified bool) error
+	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
+	DeleteRecipient(ctx context.Context, recipientID int64) error
 }
 
 type service struct {
@@ -60,10 +61,18 @@ func (s service) VerifyRecipient(ctx context.Context, recipientID int64, verifie
 	return err
 }
 
-func (s service) PublicRecipient(ctx context.Context, recipientID int64, verified bool) error {
+func (s service) PublicRecipient(ctx context.Context, recipientID int64, public bool) error {
 	logger := log.With(s.logger, "msg", "PublicRecipient")
 
 	logger.Log("msg", "Setting public Recipient")
-	err := s.repository.PublicRecipient(ctx, recipientID, verified)
+	err := s.repository.PublicRecipient(ctx, recipientID, public)
+	return err
+}
+
+func (s service) DeleteRecipient(ctx context.Context, recipientID int64) error {
+	logger := log.With(s.logger, "msg", "DeleteRecipient")
+
+	logger.Log("msg", "Deleting Recipient")
+	err := s.repository.DeleteRecipient(ctx, recipientID)
 	return err
 }
