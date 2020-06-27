@@ -18,6 +18,15 @@ services:
     networks:
       - local-network
 
+  frontend:
+    build: ./frontend
+    container_name: frontend-dp
+    restart: always
+    ports:
+      - "4200:4200"
+    networks:
+      - local-network
+
   register-dp:
     build: ./services/register
     container_name: register-dp
