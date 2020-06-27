@@ -1,0 +1,119 @@
+<div class="container">
+  <kt-header-plasma></kt-header-plasma>
+  <div class="row">
+    <div class="col-12">
+      <div class="m-5 p-5">
+        <div class="kt-register__form">
+          <kt-portlet [class]="'kt-portlet--height-fluid'" [ngStyle]="{'width': '100%'}">
+            <kt-portlet-body>
+              <form [formGroup]="formGroup" autocomplete="off" class="kt-register__form kt-form w-100" [ngStyle]="{'margin': 'auto'}">
+                <div class="row">
+                  <div class="col-3 p-5">
+
+                  </div>
+                  <div class="col-9 p-5">
+                    <h3>Debes tener 2 pruebas <b>negativas</b> a Covid-19</h3>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-form-field class="input-full-width w-100">
+                        <mat-select placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type">
+                          <mat-option *ngFor="let enum of [{value:'A+', display:'A+'}, {value:'O+', display:'O+'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="isControlHasError('blood_type','required')">
+                          <strong>Este campo es requerido</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-form-field class="input-full-width w-100">
+                        <mat-label>Tu nombre</mat-label>
+                        <input formControlName="full_name" matInput placeholder="Tu nombre (Opcional)" type="text"/>
+                        <mat-error *ngIf="isControlHasError('full_name','required')">
+                          <strong>Este campo es requerido</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-form-field class="input-full-width w-100">
+                        <mat-label>Tu tel&eacute;fono</mat-label>
+                        <input formControlName="phone" matInput placeholder="Teléfono" type="text"/>
+                        <mat-error *ngIf="isControlHasError('phone','required')">
+                          <strong>Este campo es requerido</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-form-field class="input-full-width w-100">
+                        <mat-label>Tu email</mat-label>
+                        <input formControlName="email" matInput placeholder="Tu email (Si prefieres)" type="text"/>
+                        <mat-error *ngIf="isControlHasError('email','required')">
+                          <strong>Este campo es requerido</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-form-field class="input-full-width w-100">
+                        <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city">
+                          <mat-option *ngFor="let enum of [{value:'cba', display:'Cochabamba'}, {value:'scz', display:'Santa Cruz'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="isControlHasError('city','required')">
+                          <strong>Este campo es requerido</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                      <mat-checkbox formControlName="public_profile">Perfil p&uacute;blico</mat-checkbox>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <div class="kt-register__actions" [ngStyle]="{'margin-bottom': '0.5rem'}">
+                      <button [disabled]="!formGroup.valid || loading || !formGroup.dirty" (click)="submit()"
+                              [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
+                              class="btn btn-primary btn-elevate">Quiero donar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+            </kt-portlet-body>
+          </kt-portlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
