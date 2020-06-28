@@ -31,7 +31,7 @@ import { Error6Component } from './error6/error6.component';
         component: ErrorComponent,
         children: [
           {
-            path: 'error-1',
+            path: '404',
             component: Error1Component,
           },
           {
