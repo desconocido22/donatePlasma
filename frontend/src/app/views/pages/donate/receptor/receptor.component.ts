@@ -10,6 +10,16 @@ export class ReceptorComponent implements OnInit {
 
   public formGroup: FormGroup;
   loading: boolean;
+  public list = [
+    { count: 3, type: 'a-positivo'}, 
+    { count: 2, type: 'a-negativo'}, 
+    { count: 1, type: 'b-positivo'},
+    { count: 0, type: 'b-negativo'}, 
+    { count: 1, type: 'ab-positivo'}, 
+    { count: 5, type: 'ab-negativo'}, 
+    { count: 3, type: 'o-positivo'}, 
+    { count: 9999, type: 'o-negativo'}
+  ];
   constructor(
     private fb: FormBuilder,
   ) {
