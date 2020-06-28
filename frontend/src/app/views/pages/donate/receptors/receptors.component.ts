@@ -15,7 +15,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'a-negativo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
     {
       id: 1,
@@ -23,7 +25,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'a-positivo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
     {
       id: 1,
@@ -31,7 +35,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'ab-positivo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
     {
       id: 1,
@@ -39,7 +45,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'ab-negativo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
     {
       id: 1,
@@ -47,7 +55,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'b-positivo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
     {
       id: 1,
@@ -55,7 +65,9 @@ export class ReceptorsComponent implements OnInit {
       phone: '123123',
       cell: '123123',
       email: '123123@123123.com',
-      city_name: 'Cochabamba'
+      city_name: 'Cochabamba',
+      blood_type: 'b-negativo',
+      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
     },
 
   ];
