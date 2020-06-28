@@ -15,3 +15,4 @@
 # vendor/
 databases/mysql/data
 .DS_Store
+.angulardoc.json
