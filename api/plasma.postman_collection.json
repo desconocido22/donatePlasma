@@ -9,13 +9,13 @@
 			"name": "recipient",
 			"item": [
 				{
-					"name": "Create recipietn",
+					"name": "Create recipient",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"recipient\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Yesi Rojas\",\n        \"cell_phones\": \"71726456\",\n        \"email\": \"yesi.rojas@gmail.com\",\n        \"photo_path\": \"\",\n        \"city_id\": 1,\n        \"public\": false\n    }\n}",
+							"raw": "{ \n    \"recipient\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Test recipient 7\",\n        \"cell_phones\": \"71733336\",\n        \"email\": \"\",\n        \"photo_path\": \"\",\n        \"city_id\": 1,\n        \"public\": false\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,6 +265,275 @@
 								{
 									"key": "id",
 									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "donor",
+			"item": [
+				{
+					"name": "Create donor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"donor\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Donor 1\",\n        \"cell\": \"22123\",\n        \"email\": \"donor1@gmail.com\",\n        \"city_id\": 1,\n        \"public\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all donors for management",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"type": "text",
+								"value": "{{api-key}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all public donors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/public",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Donor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"donor\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Donor 1\",\n        \"cell\": \"22123111\",\n        \"email\": \"\",\n        \"city_id\": 1,\n        \"public\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Donor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"verified\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/:id/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								":id",
+								"verify"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set public donor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"public\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/:id/public",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								":id",
+								"public"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete donor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"type": "text",
+								"value": "{{api-key}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate donor",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "api-key",
+								"type": "text",
+								"value": "{{api-key}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/register/donor/:id/activate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"register",
+								"donor",
+								":id",
+								"activate"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
 								}
 							]
 						}
