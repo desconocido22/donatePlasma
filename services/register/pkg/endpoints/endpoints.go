@@ -1,10 +1,6 @@
 package endpoints
 
 import (
-	"context"
-	"errors"
-
-	reqres "github.com/StevenRojas/donatePlasma/services/register/pkg/reqres"
 	service "github.com/StevenRojas/donatePlasma/services/register/pkg/service"
 	"github.com/go-kit/kit/endpoint"
 )
@@ -19,6 +15,15 @@ type Endpoints struct {
 	PublicRecipient     endpoint.Endpoint
 	DeleteRecipient     endpoint.Endpoint
 	ActivateRecipient   endpoint.Endpoint
+
+	CreateDonor     endpoint.Endpoint
+	GetDonors       endpoint.Endpoint
+	GetPublicDonors endpoint.Endpoint
+	UpdateDonor     endpoint.Endpoint
+	VerifyDonor     endpoint.Endpoint
+	PublicDonor     endpoint.Endpoint
+	DeleteDonor     endpoint.Endpoint
+	ActivateDonor   endpoint.Endpoint
 }
 
 // MakeEndpoints create endpoints
@@ -32,123 +37,14 @@ func MakeEndpoints(s service.Service) Endpoints {
 		PublicRecipient:     makePublicRecipientEndpoint(s),
 		DeleteRecipient:     makeDeleteRecipientEndpoint(s),
 		ActivateRecipient:   makeActivateRecipientEndpoint(s),
-	}
-}
 
-func makeCreateRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.CreateRecipientRequest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		id, err := s.CreateRecipient(ctx, req.Recipient)
-
-		return reqres.CreateRecipientResponse{
-			ID:  id,
-			Err: err,
-		}, err
-	}
-}
-
-func makeGetRecipientsEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		recipients, err := s.GetRecipientList(ctx, false)
-
-		return reqres.GetRecipientsResponse{
-			Recipients: recipients,
-			Err:        err,
-		}, err
-	}
-}
-
-func makeGetPublicRecipientsEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		recipients, err := s.GetRecipientList(ctx, true)
-
-		return reqres.GetRecipientsResponse{
-			Recipients: recipients,
-			Err:        err,
-		}, err
-	}
-}
-
-func makeUpdateRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.UpdateRecipientRequest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		recipient, err := s.UpdateRecipient(ctx, req.Recipient)
-
-		return reqres.UpdateRecipientResponse{
-			Recipient: recipient,
-			Err:       err,
-		}, err
-	}
-}
-
-func makeVerifyRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.VerifyRecipientResquest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		err := s.VerifyRecipient(ctx, req.ID, req.Verified)
-		ok = (err == nil)
-		return reqres.OkErrorResponse{
-			Ok:  ok,
-			Err: err,
-		}, err
-	}
-}
-
-func makePublicRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.PublicRecipientResquest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		err := s.PublicRecipient(ctx, req.ID, req.Public)
-		ok = (err == nil)
-		return reqres.OkErrorResponse{
-			Ok:  ok,
-			Err: err,
-		}, err
-	}
-}
-
-func makeDeleteRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.DeleteRecipientResquest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		err := s.DeleteRecipient(ctx, req.ID)
-		ok = (err == nil)
-		return reqres.OkErrorResponse{
-			Ok:  ok,
-			Err: err,
-		}, err
-	}
-}
-
-func makeActivateRecipientEndpoint(s service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(reqres.ActivateRecipientResquest)
-		if !ok {
-			return nil, errors.New("Wrong request message")
-		}
-
-		err := s.ActivateRecipient(ctx, req.ID)
-		ok = (err == nil)
-		return reqres.OkErrorResponse{
-			Ok:  ok,
-			Err: err,
-		}, err
+		CreateDonor:     makeCreateDonorEndpoint(s),
+		GetDonors:       makeGetDonorsEndpoint(s),
+		GetPublicDonors: makeGetPublicDonorsEndpoint(s),
+		UpdateDonor:     makeUpdateDonorEndpoint(s),
+		VerifyDonor:     makeVerifyDonorEndpoint(s),
+		PublicDonor:     makePublicDonorEndpoint(s),
+		DeleteDonor:     makeDeleteDonorEndpoint(s),
+		ActivateDonor:   makeActivateDonorEndpoint(s),
 	}
 }

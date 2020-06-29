@@ -22,7 +22,7 @@ type Recipient struct {
 
 // Donor structure for donors
 type Donor struct {
-	ID          int            `json:"id,omitempty"`
+	ID          int64          `json:"id,omitempty"`
 	BloodTypeID int            `json:"blood_type_id"`
 	Name        string         `json:"name"`
 	Cell        string         `json:"cell"`
