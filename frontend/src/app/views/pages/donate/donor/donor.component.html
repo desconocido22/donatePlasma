@@ -22,10 +22,10 @@
                   <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                     <div class="form-group">
                       <mat-form-field class="input-full-width w-100">
-                        <mat-select placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type">
-                          <mat-option *ngFor="let enum of [{value:'A+', display:'A+'}, {value:'O+', display:'O+'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                        <mat-select placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type_id">
+                          <mat-option *ngFor="let enumObj of bloodTypes" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="isControlHasError('blood_type','required')">
+                        <mat-error *ngIf="isControlHasError('blood_type_id','required')">
                           <strong>Este campo es requerido</strong>
                         </mat-error>
                       </mat-form-field>
@@ -39,8 +39,8 @@
                     <div class="form-group">
                       <mat-form-field class="input-full-width w-100">
                         <mat-label>Tu nombre</mat-label>
-                        <input formControlName="full_name" matInput placeholder="Tu nombre (Opcional)" type="text"/>
-                        <mat-error *ngIf="isControlHasError('full_name','required')">
+                        <input formControlName="name" matInput placeholder="Tu nombre (Opcional)" type="text"/>
+                        <mat-error *ngIf="isControlHasError('name','required')">
                           <strong>Este campo es requerido</strong>
                         </mat-error>
                       </mat-form-field>
@@ -53,8 +53,8 @@
                     <div class="form-group">
                       <mat-form-field class="input-full-width w-100">
                         <mat-label>Tu tel&eacute;fono</mat-label>
-                        <input formControlName="phone" matInput placeholder="Teléfono" type="text"/>
-                        <mat-error *ngIf="isControlHasError('phone','required')">
+                        <input formControlName="cell" matInput placeholder="Teléfono" type="text"/>
+                        <mat-error *ngIf="isControlHasError('cell','required')">
                           <strong>Este campo es requerido</strong>
                         </mat-error>
                       </mat-form-field>
@@ -71,6 +71,9 @@
                         <mat-error *ngIf="isControlHasError('email','required')">
                           <strong>Este campo es requerido</strong>
                         </mat-error>
+                        <mat-error *ngIf="isControlHasError('email','email')">
+                          <strong>Por favor ingrese un email v&aacute;lido</strong>
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -80,10 +83,10 @@
                   <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                     <div class="form-group">
                       <mat-form-field class="input-full-width w-100">
-                        <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city">
-                          <mat-option *ngFor="let enum of [{value:'cba', display:'Cochabamba'}, {value:'scz', display:'Santa Cruz'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                        <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city_id">
+                          <mat-option *ngFor="let enumObj of cities" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="isControlHasError('city','required')">
+                        <mat-error *ngIf="isControlHasError('city_id','required')">
                           <strong>Este campo es requerido</strong>
                         </mat-error>
                       </mat-form-field>
@@ -94,11 +97,10 @@
                 <div class="row">
                   <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                     <div class="form-group">
-                      <mat-checkbox formControlName="public_profile">Perfil p&uacute;blico</mat-checkbox>
+                      <mat-checkbox formControlName="public">Perfil p&uacute;blico</mat-checkbox>
                     </div>
                   </div>
                 </div>
-
 
                 <div class="row">
                   <div class="col-12 text-center">
@@ -119,3 +121,20 @@
     </div>
   </div>
 </div>
+<swal
+        #coolModal
+        [swalOptions]="coolModalOption"
+>
+  <div *swalPortal>
+    Gracias por su apoyo!
+  </div>
+</swal>
+
+<swal
+        #failModal
+        [swalOptions]="failModalOption"
+>
+  <div *swalPortal>
+    Por favor intente nuevamente en un par de segundos
+  </div>
+</swal>

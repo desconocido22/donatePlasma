@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {RecipientService} from "../../../../core/donate/services/recipient.service";
+import {RecipientModel} from "../../../../core/donate/models/recipient.model";
+import {bloodTypes, cities} from "../../../../../environments/environment";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'kt-receptors',
@@ -8,77 +12,20 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class ReceptorsComponent implements OnInit {
   public formGroup: FormGroup;
-  public list = [
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'a-negativo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'a-positivo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'ab-positivo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'ab-negativo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'b-positivo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
-    {
-      id: 1,
-      full_name: 'Test 01',
-      phone: '123123',
-      cell: '123123',
-      email: '123123@123123.com',
-      city_name: 'Cochabamba',
-      blood_type: 'b-negativo',
-      compatible: ['a-positivo', 'b-positivo', 'a-negativo', 'b-negativo', 'ab-positivo', 'ab-negativo']
-    },
+  public list: Observable<RecipientModel[]>;
+  public bloodTypes = bloodTypes;
+  public cities = cities;
+  public loading: boolean;
 
-  ];
   constructor(
     private fb: FormBuilder,
+    private recipientService: RecipientService
   ) {
     this.initRegisterFormGroup();
   }
 
   ngOnInit(): void {
-
+    this.list = this.recipientService.getAllPublic();
   }
 
   public initRegisterFormGroup() {

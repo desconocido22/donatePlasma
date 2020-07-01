@@ -18,24 +18,26 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
+import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 
 @NgModule({
   declarations: [DonorComponent, HomeComponent, ReceptorComponent, ReceptorsComponent, HeaderPlasmaComponent],
   exports: [],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    CoreModule,
-    PartialsModule,
-    RouterModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatInputModule,
-  ],
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        FormsModule,
+        CoreModule,
+        PartialsModule,
+        RouterModule,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        SweetAlert2Module,
+    ],
   providers: []
 })
 export class PagesModule {
