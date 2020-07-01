@@ -35,6 +35,8 @@ services:
       - mysql-dp
     ports: 
       - "8000:8000" # REST
+    env_file:
+      - services/register/env_vars.env
     networks: 
       - local-network
 
@@ -45,7 +47,9 @@ services:
     depends_on:
       - mysql-dp
     ports: 
-      - "8011:8000" # REST
+      - "8001:8000" # REST
+    env_file:
+      - services/matcher/env_vars.env
     networks: 
       - local-network
 

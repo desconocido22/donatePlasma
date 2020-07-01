@@ -1,7 +1,5 @@
 FROM golang:alpine AS register
 
-ENV REGISTER_PORT=8000
-
 # Working directory for build
 WORKDIR /build
 

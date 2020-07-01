@@ -60,9 +60,9 @@ func connectToDb(conn string) *sql.DB {
 }
 
 func getHTTPPort() string {
-	httpPort, ok := os.LookupEnv("REGISTER_PORT")
+	httpPort, ok := os.LookupEnv("HTTP_PORT")
 	if !ok {
-		httpPort = "8000"
+		httpPort = "8001"
 	}
 	return ":" + httpPort
 }
@@ -76,7 +76,7 @@ func getConnectionString() string {
 	if !ok {
 		password = "123"
 	}
-	host, ok := os.LookupEnv("MYSQL_HOST")
+	host, ok := os.LookupEnv("MYSQL_SERVER")
 	if !ok {
 		host = "localhost"
 	}
@@ -84,7 +84,7 @@ func getConnectionString() string {
 	if !ok {
 		port = "33016"
 	}
-	db, ok := os.LookupEnv("MYSQL_DB")
+	db, ok := os.LookupEnv("MYSQL_DATABASE")
 	if !ok {
 		db = "donate"
 	}

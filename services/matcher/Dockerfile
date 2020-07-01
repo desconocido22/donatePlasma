@@ -1,7 +1,5 @@
 FROM golang:alpine AS matcher
 
-ENV MATCHER_PORT=8001
-
 # Working directory for build
 WORKDIR /build
 
@@ -17,5 +15,5 @@ RUN go build -o matcher
 # Working directory for place the binary
 WORKDIR /bin
 RUN cp /build/matcher .
-EXPOSE 8001
+EXPOSE 8000
 ENTRYPOINT ["/bin/matcher"]
