@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/StevenRojas/donatePlasma/services/register/pkg/endpoints"
-	"github.com/StevenRojas/donatePlasma/services/register/pkg/service"
-	"github.com/StevenRojas/donatePlasma/services/register/pkg/transport"
+	"github.com/StevenRojas/donatePlasma/services/matcher/pkg/endpoints"
+	"github.com/StevenRojas/donatePlasma/services/matcher/pkg/service"
+	"github.com/StevenRojas/donatePlasma/services/matcher/pkg/transport"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	_ "github.com/go-sql-driver/mysql"
@@ -22,8 +22,8 @@ var logger log.Logger
 func main() {
 	httpPort := getHTTPPort()
 	logger = setLogger()
-	level.Info(logger).Log("msg", "Register server starting")
-	defer level.Info(logger).Log("msg", "Register server ended")
+	level.Info(logger).Log("msg", "Matcher server starting")
+	defer level.Info(logger).Log("msg", "Matcher server ended")
 
 	db := connectToDb(getConnectionString())
 	ctx := context.Background()
@@ -97,7 +97,7 @@ func setLogger() log.Logger {
 		logger = log.NewLogfmtLogger(os.Stderr)
 		logger = log.NewSyncLogger(logger)
 		logger = log.With(logger,
-			"service:", "Register",
+			"service:", "Matcher",
 			"time:", log.DefaultTimestampUTC,
 			"caller:", log.DefaultCaller,
 		)
