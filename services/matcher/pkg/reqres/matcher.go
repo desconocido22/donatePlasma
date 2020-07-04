@@ -2,14 +2,16 @@ package reqres
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
 
 	entities "github.com/StevenRojas/donatePlasma/services/matcher/pkg/service"
+	"github.com/gorilla/mux"
 )
 
-// GetRecipientsRequest vefiry recipient request
+// GetRecipientsRequest recipient list request
 type GetRecipientsRequest struct {
 	BloodTypeID *int64
 	CityID      *int64
@@ -19,6 +21,30 @@ type GetRecipientsRequest struct {
 type GetRecipientsResponse struct {
 	Recipients []entities.Recipient `json:"recipients"`
 	Err        error                `json:"error,omitempty"`
+}
+
+// BloodTypeRequest blood type request
+type BloodTypeRequest struct {
+	BloodTypeID int64
+}
+
+// CompatibleBloodTypeResponse blood type request
+type CompatibleBloodTypeResponse struct {
+	Types string `json:"compatible_types"`
+	Err   error  `json:"error,omitempty"`
+}
+
+// DecodeBloodTypeRequest decode blood type request
+func DecodeBloodTypeRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req BloodTypeRequest
+
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["typeId"], 10, 32)
+	if err != nil {
+		return nil, errors.New("Invalid blood type ID")
+	}
+	req.BloodTypeID = id
+	return req, nil
 }
 
 // DecodePublicRecipientListRequest decode public recipient list request

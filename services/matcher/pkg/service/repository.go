@@ -29,7 +29,10 @@ func NewRepository(db *sql.DB, logger log.Logger) Repository {
 // GetRecipientList get a list of verified and public recipients. TODO: Implement pagination
 func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64) ([]Recipient, error) {
 	var sql string
-	sql = `SELECT * FROM recipient WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
+	sql = `SELECT id, blood_type_id, name, cell_numbers, email, photo_path, city_id, verified, public, created_at, updated_at, deleted_at,
+			(SELECT GROUP_CONCAT(donor_blood_type_id SEPARATOR ',') as compatible_with FROM compatibility 
+			WHERE recipient_blood_type_id = blood_type_id) as compatible_with
+			FROM recipient WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
 	if cityID != nil {
 		sql = sql + " AND city_id = " + strconv.FormatInt(*cityID, 10)
 	}
@@ -47,7 +50,7 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 		var recipient Recipient
 		err = rows.Scan(&recipient.ID, &recipient.BloodTypeID, &recipient.Name, &recipient.CellPhones,
 			&recipient.Email, &recipient.PhotoPath, &recipient.CityID, &recipient.Verified, &recipient.Public,
-			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt)
+			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt, &recipient.CompatibleWith)
 		if err != nil {
 			return nil, err
 		}
