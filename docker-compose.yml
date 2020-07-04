@@ -35,6 +35,21 @@ services:
       - mysql-dp
     ports: 
       - "8000:8000" # REST
+    env_file:
+      - services/register/env_vars.env
+    networks: 
+      - local-network
+
+  matcher-dp:
+    build: ./services/matcher
+    container_name: matcher-dp
+    restart: always
+    depends_on:
+      - mysql-dp
+    ports: 
+      - "8001:8000" # REST
+    env_file:
+      - services/matcher/env_vars.env
     networks: 
       - local-network
 
