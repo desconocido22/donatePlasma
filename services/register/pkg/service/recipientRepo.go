@@ -10,10 +10,10 @@ import (
 func (repo *repository) CreateRecipient(ctx context.Context, recipient Recipient) (int64, error) {
 	sql := `
 	INSERT INTO recipient (id, blood_type_id, name, cell_numbers, email, photo_path, city_id, verified, public)
-	VALUES (null, ?, ?, ?, ?, ?, ?, 0, ?);`
+	VALUES (null, ?, ?, ?, ?, ?, ?, 1, ?);`
 	stmt, err := repo.db.Prepare(sql)
 	res, err := stmt.ExecContext(ctx, strconv.Itoa(recipient.BloodTypeID), recipient.Name, recipient.CellPhones, recipient.Email,
-		recipient.PhotoPath, strconv.Itoa(recipient.CityID), recipient.Public)
+		recipient.PhotoPath, recipient.CityID, recipient.Public)
 	if err != nil {
 		return 0, err
 	}
@@ -54,7 +54,7 @@ func (repo *repository) UpdateRecipient(ctx context.Context, recipient Recipient
 		city_id = ?, public = ? WHERE id = ?;`
 	stmt, err := repo.db.Prepare(sql)
 	_, err = stmt.ExecContext(ctx, strconv.Itoa(recipient.BloodTypeID), recipient.Name, recipient.CellPhones, recipient.Email,
-		recipient.PhotoPath, strconv.Itoa(recipient.CityID), recipient.Public, recipient.ID)
+		recipient.PhotoPath, recipient.CityID, recipient.Public, recipient.ID)
 	if err != nil {
 		return recipient, err
 	}

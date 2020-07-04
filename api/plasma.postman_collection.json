@@ -542,6 +542,87 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "matcher",
+			"item": [
+				{
+					"name": "Recepients by compatibility and city",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/recipients?compatible_with=4&city=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"recipients"
+							],
+							"query": [
+								{
+									"key": "compatible_with",
+									"value": "4"
+								},
+								{
+									"key": "city",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Can receive from",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/can-receive-from/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"can-receive-from",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Can Donate To",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/can-donate-to/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"can-donate-to",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
