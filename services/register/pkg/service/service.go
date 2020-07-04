@@ -15,6 +15,14 @@ type Service interface {
 	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
 	DeleteRecipient(ctx context.Context, recipientID int64) error
 	ActivateRecipient(ctx context.Context, recipientID int64) error
+
+	CreateDonor(ctx context.Context, donor Donor) (int64, error)
+	GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error)
+	UpdateDonor(ctx context.Context, donor Donor) (Donor, error)
+	VerifyDonor(ctx context.Context, donorID int64, verified bool) error
+	PublicDonor(ctx context.Context, donorID int64, public bool) error
+	DeleteDonor(ctx context.Context, donorID int64) error
+	ActivateDonor(ctx context.Context, donorID int64) error
 }
 
 type service struct {
@@ -83,5 +91,61 @@ func (s service) ActivateRecipient(ctx context.Context, recipientID int64) error
 
 	logger.Log("msg", "Activating Recipient")
 	err := s.repository.ActivateRecipient(ctx, recipientID)
+	return err
+}
+
+func (s service) CreateDonor(ctx context.Context, donor Donor) (int64, error) {
+	logger := log.With(s.logger, "msg", "CreateDonor")
+
+	logger.Log("msg", "Creating Donor")
+	response, err := s.repository.CreateDonor(ctx, donor)
+	return response, err
+}
+
+func (s service) GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error) {
+	logger := log.With(s.logger, "msg", "GetDonorList")
+
+	logger.Log("msg", "Getting Donor list")
+	response, err := s.repository.GetDonorList(ctx, publicOnly)
+	return response, err
+}
+
+func (s service) UpdateDonor(ctx context.Context, donor Donor) (Donor, error) {
+	logger := log.With(s.logger, "msg", "UpdateDonor")
+
+	logger.Log("msg", "Updating Donor")
+	response, err := s.repository.UpdateDonor(ctx, donor)
+	return response, err
+}
+
+func (s service) VerifyDonor(ctx context.Context, donorID int64, verified bool) error {
+	logger := log.With(s.logger, "msg", "VerifyDonor")
+
+	logger.Log("msg", "Verifiying Donor")
+	err := s.repository.VerifyDonor(ctx, donorID, verified)
+	return err
+}
+
+func (s service) PublicDonor(ctx context.Context, donorID int64, public bool) error {
+	logger := log.With(s.logger, "msg", "PublicDonor")
+
+	logger.Log("msg", "Setting public Donor")
+	err := s.repository.PublicDonor(ctx, donorID, public)
+	return err
+}
+
+func (s service) DeleteDonor(ctx context.Context, donorID int64) error {
+	logger := log.With(s.logger, "msg", "DeleteDonor")
+
+	logger.Log("msg", "Deleting Donor")
+	err := s.repository.DeleteDonor(ctx, donorID)
+	return err
+}
+
+func (s service) ActivateDonor(ctx context.Context, donorID int64) error {
+	logger := log.With(s.logger, "msg", "ActivateDonor")
+
+	logger.Log("msg", "Activating Donor")
+	err := s.repository.ActivateDonor(ctx, donorID)
 	return err
 }

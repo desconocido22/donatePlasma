@@ -11,12 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// OkErrorResponse Empty response, just OK or Error
-type OkErrorResponse struct {
-	Ok  bool  `json:"ok"`
-	Err error `json:"error,omitempty"`
-}
-
 // CreateRecipientRequest create recipient request
 type CreateRecipientRequest struct {
 	Recipient entities.Recipient `json:"recipient"`

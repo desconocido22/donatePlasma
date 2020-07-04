@@ -14,7 +14,7 @@
                         <div class="form-group">
                           <mat-form-field class="input-full-width w-100">
                             <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city">
-                              <mat-option *ngFor="let enum of [{value:'cba', display:'Cochabamba'}, {value:'scz', display:'Santa Cruz'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                              <mat-option *ngFor="let enumObj of cities" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                             </mat-select>
                           </mat-form-field>
                         </div>
@@ -23,7 +23,7 @@
                         <div class="form-group">
                           <mat-form-field class="input-full-width w-100">
                             <mat-select placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type">
-                              <mat-option *ngFor="let enum of [{value:'A+', display:'A+'}, {value:'O+', display:'O+'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                              <mat-option *ngFor="let enumObj of bloodTypes" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                             </mat-select>
                           </mat-form-field>
                         </div>
@@ -33,7 +33,7 @@
                 </div>
               </form>
               <div class="row">
-                <div class="col-12" *ngFor="let item of list">
+                <div class="col-12" *ngFor="let item of list | async">
                   <div class="item-border">
                     <div class="row">
                       <div class="col-12 col-sm-6">
@@ -41,22 +41,26 @@
                           <div class="col-8">
                             <div class="row">
                               <div class="col-12">
-                                <h3>{{ item.full_name }}</h3>
+                                <h3>{{ item.name }}</h3>
                               </div>
                               <div class="col-12">
-                                <p>{{ item.phone }} <span *ngIf="item.phone && item.cell">-</span> <span *ngIf="item.cell"> {{ item.cell }}</span> </p>
+<!--                                <p>{{ item.phone }} <span *ngIf="item.phone && item.cell">-</span> <span *ngIf="item.cell"> {{ item.cell }}</span> </p>-->
+                                <p>{{ item.cell_phones }} </p>
                               </div>
                               <div class="col-12">
                                 <p> {{ item.email }}</p>
                               </div>
                               <div class="col-12">
-                                <p> {{ item.city_name }} </p>
+                                <ng-container *ngFor="let city of cities">
+                                  <p *ngIf="item.city_id == city.value"> {{ city.display }} </p>
+                                </ng-container>
+
                               </div>
                             </div>
                           </div>
                           <div class="col-4 text-left">
                             <div class="blood-image-container">
-                              <img class="blood-image" src="./assets/media/plasma/icono-sangre-{{ item.blood_type }}.svg" width="84px" height="84px" />
+                              <img class="blood-image" src="./assets/media/plasma/icono-sangre-{{ item.blood_type_id }}.svg" width="84px" height="84px" />
                             </div>
                           </div>
                         </div>
