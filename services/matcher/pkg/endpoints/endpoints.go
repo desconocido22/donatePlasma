@@ -27,10 +27,11 @@ func MakeEndpoints(s service.Service) Endpoints {
 func makeGetPublicRecipientsEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, _ := request.(reqres.GetRecipientsRequest)
-		recipients, err := s.GetRecipientList(ctx, req.CityID, req.BloodTypeID)
+		recipients, count, err := s.GetRecipientList(ctx, req.CityID, req.BloodTypeID, req.Page, req.PerPage)
 
 		return reqres.GetRecipientsResponse{
 			Recipients: recipients,
+			Total:      count,
 			Err:        err,
 		}, err
 	}

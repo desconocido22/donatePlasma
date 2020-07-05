@@ -8,7 +8,7 @@ import (
 
 // Service definition
 type Service interface {
-	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64) ([]Recipient, error)
+	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, page int64, perPage int64) ([]Recipient, int64, error)
 	CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 	CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 }
@@ -26,12 +26,12 @@ func NewService(rep Repository, logger log.Logger) Service {
 	}
 }
 
-func (s service) GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64) ([]Recipient, error) {
+func (s service) GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, page int64, perPage int64) ([]Recipient, int64, error) {
 	logger := log.With(s.logger, "msg", "GetRecipientList")
 
 	logger.Log("msg", "Getting Recipient list")
-	response, err := s.repository.GetRecipientList(ctx, cityID, bloodTypeID)
-	return response, err
+	response, count, err := s.repository.GetRecipientList(ctx, cityID, bloodTypeID, page, perPage)
+	return response, count, err
 }
 
 func (s service) CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error) {
