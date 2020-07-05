@@ -39,11 +39,11 @@ func makeGetPublicRecipientsEndpoint(s service.Service) endpoint.Endpoint {
 func makeCanReceiveFromEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, _ := request.(reqres.BloodTypeRequest)
-		types, err := s.CanReceiveFrom(ctx, req.BloodTypeID)
+		count, err := s.CanReceiveFrom(ctx, req.BloodTypeID)
 
 		return reqres.CompatibleBloodTypeResponse{
-			Types: types,
-			Err:   err,
+			Compatible: count,
+			Err:        err,
 		}, err
 	}
 }
@@ -51,11 +51,11 @@ func makeCanReceiveFromEndpoint(s service.Service) endpoint.Endpoint {
 func makeCanDonateToEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, _ := request.(reqres.BloodTypeRequest)
-		types, err := s.CanDonateTo(ctx, req.BloodTypeID)
+		count, err := s.CanDonateTo(ctx, req.BloodTypeID)
 
 		return reqres.CompatibleBloodTypeResponse{
-			Types: types,
-			Err:   err,
+			Compatible: count,
+			Err:        err,
 		}, err
 	}
 }
