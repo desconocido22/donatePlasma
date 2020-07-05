@@ -3,7 +3,6 @@ package transport
 import (
 	"context"
 	"net/http"
-	"strings"
 
 	"github.com/StevenRojas/donatePlasma/services/register/pkg/endpoints"
 	"github.com/gorilla/mux"
@@ -21,12 +20,7 @@ func NewHTTPServer(ctx context.Context, endpoints endpoints.Endpoints) http.Hand
 func middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			headers := []string{"Content-Type", "Accept", "Authorization", "token"}
-			w.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ","))
-			methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"}
-			w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
+			w.Header().Add("Content-Type", "application/json")
 			if r.Method == "OPTIONS" {
 				return
 			}

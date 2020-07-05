@@ -15,6 +15,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/handlers"
 )
 
 var logger log.Logger
@@ -35,8 +36,8 @@ func main() {
 
 	go func() {
 		level.Info(logger).Log("msg", "Listing on port "+httpPort)
-		handler := transport.NewHTTPServer(ctx, endpoints)
-		errs <- http.ListenAndServe(httpPort, handler)
+		router := transport.NewHTTPServer(ctx, endpoints)
+		errs <- http.ListenAndServe(httpPort, handlers.CORS()(router))
 	}()
 
 	go func() {
