@@ -10,10 +10,10 @@ import (
 func (repo *repository) CreateDonor(ctx context.Context, donor Donor) (int64, error) {
 	sql := `
 	INSERT INTO donor (id, blood_type_id, name, cell, email, city_id, verified, public)
-	VALUES (null, ?, ?, ?, ?, ?, 0, ?);`
+	VALUES (null, ?, ?, ?, ?, ?, 1, ?);`
 	stmt, err := repo.db.Prepare(sql)
 	res, err := stmt.ExecContext(ctx, strconv.Itoa(donor.BloodTypeID), donor.Name, donor.Cell, donor.Email,
-		strconv.Itoa(donor.CityID), donor.Public)
+		donor.CityID, donor.Public)
 	if err != nil {
 		return 0, err
 	}
@@ -53,7 +53,7 @@ func (repo *repository) UpdateDonor(ctx context.Context, donor Donor) (Donor, er
 	UPDATE donor SET blood_type_id = ?, name = ?, cell = ?, email = ?, city_id = ?, public = ? WHERE id = ?;`
 	stmt, err := repo.db.Prepare(sql)
 	_, err = stmt.ExecContext(ctx, strconv.Itoa(donor.BloodTypeID), donor.Name, donor.Cell, donor.Email,
-		strconv.Itoa(donor.CityID), donor.Public, donor.ID)
+		donor.CityID, donor.Public, donor.ID)
 	if err != nil {
 		return donor, err
 	}
