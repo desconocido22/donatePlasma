@@ -31,3 +31,9 @@ type Donor struct {
 	UpdatedAt   NullTime   `json:"updated_at"`
 	DeletedAt   NullTime   `json:"deleted_at"`
 }
+
+// CompatibleBloodCount counts for a given blood type
+type CompatibleBloodCount struct {
+	BloodTypeID int64 `json:"blood_type_id"`
+	Count       int64 `json:"count"`
+}

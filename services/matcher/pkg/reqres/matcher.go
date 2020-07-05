@@ -30,8 +30,8 @@ type BloodTypeRequest struct {
 
 // CompatibleBloodTypeResponse blood type request
 type CompatibleBloodTypeResponse struct {
-	Types string `json:"compatible_types"`
-	Err   error  `json:"error,omitempty"`
+	Compatible []entities.CompatibleBloodCount `json:"compatible_types"`
+	Err        error                           `json:"error,omitempty"`
 }
 
 // DecodeBloodTypeRequest decode blood type request

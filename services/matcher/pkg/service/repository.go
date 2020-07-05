@@ -11,6 +11,8 @@ import (
 // Repository interface
 type Repository interface {
 	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64) ([]Recipient, error)
+	CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
+	CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 }
 
 type repository struct {
@@ -55,6 +57,46 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 			return nil, err
 		}
 		list = append(list, recipient)
+	}
+	return list, nil
+}
+
+// CanReceiveFrom returns donor counts for a recipient
+func (repo *repository) CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error) {
+	sql := `SELECT donor_blood_type_id, (SELECT count(id) FROM donor WHERE blood_type_id = donor_blood_type_id) as c 
+		FROM compatibility WHERE recipient_blood_type_id = ` + strconv.FormatInt(bloodTypeID, 10)
+	rows, err := repo.db.QueryContext(ctx, sql)
+	if err != nil {
+		return nil, err
+	}
+	list := []CompatibleBloodCount{}
+	for rows.Next() {
+		var count CompatibleBloodCount
+		err = rows.Scan(&count.BloodTypeID, &count.Count)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, count)
+	}
+	return list, nil
+}
+
+// CanDonateTo returns recipient counts for a donor
+func (repo *repository) CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error) {
+	sql := `SELECT recipient_blood_type_id, (SELECT count(id) FROM recipient WHERE blood_type_id = recipient_blood_type_id) as c 
+		FROM compatibility WHERE donor_blood_type_id= ` + strconv.FormatInt(bloodTypeID, 10)
+	rows, err := repo.db.QueryContext(ctx, sql)
+	if err != nil {
+		return nil, err
+	}
+	list := []CompatibleBloodCount{}
+	for rows.Next() {
+		var count CompatibleBloodCount
+		err = rows.Scan(&count.BloodTypeID, &count.Count)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, count)
 	}
 	return list, nil
 }
