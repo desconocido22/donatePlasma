@@ -15,11 +15,14 @@ import (
 type GetRecipientsRequest struct {
 	BloodTypeID *int64
 	CityID      *int64
+	Page        int64
+	PerPage     int64
 }
 
 // GetRecipientsResponse Get a list of recipients
 type GetRecipientsResponse struct {
 	Recipients []entities.Recipient `json:"recipients"`
+	Total      int64                `json:"total_records"`
 	Err        error                `json:"error,omitempty"`
 }
 
@@ -59,6 +62,18 @@ func DecodePublicRecipientListRequest(ctx context.Context, r *http.Request) (int
 	bloodTypeID, ok := getIntOrNull(vars, "compatible_with")
 	if ok {
 		req.BloodTypeID = &bloodTypeID
+	}
+	page, ok := getIntOrNull(vars, "page")
+	if ok {
+		req.Page = page
+	} else {
+		req.Page = 1
+	}
+	perPage, ok := getIntOrNull(vars, "per_page")
+	if ok {
+		req.PerPage = perPage
+	} else {
+		req.PerPage = 30
 	}
 	return req, nil
 }
