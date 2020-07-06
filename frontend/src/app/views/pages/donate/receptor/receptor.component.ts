@@ -4,8 +4,8 @@ import {bloodTypes, cities} from "../../../../../environments/environment";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {SweetAlertOptions} from "sweetalert2";
 import {RecipientService} from "../../../../core/donate/services/recipient.service";
-import {DonorModel} from "../../../../core/donate/models/donor.model";
 import {RecipientModel} from "../../../../core/donate/models/recipient.model";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'kt-receptor',
@@ -13,30 +13,20 @@ import {RecipientModel} from "../../../../core/donate/models/recipient.model";
   styleUrls: ['./receptor.component.scss']
 })
 export class ReceptorComponent implements OnInit {
-  @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
   public coolModalOption: SweetAlertOptions;
-
-  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
   public failModalOption: SweetAlertOptions;
-
   public formGroup: FormGroup;
   public bloodTypes = bloodTypes;
   public cities = cities;
   public loading: boolean;
+  public donors: any[];
+  public bloodTypeSelected: number;
+  @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
+  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
 
-  public list = [
-    { count: 3, type: 'a-positivo'}, 
-    { count: 2, type: 'a-negativo'}, 
-    { count: 1, type: 'b-positivo'},
-    { count: 0, type: 'b-negativo'}, 
-    { count: 1, type: 'ab-positivo'}, 
-    { count: 5, type: 'ab-negativo'}, 
-    { count: 3, type: 'o-positivo'}, 
-    { count: 9999, type: 'o-negativo'}
-  ];
   constructor(
-    private fb: FormBuilder,
-    private recipientService: RecipientService
+      private fb: FormBuilder,
+      private recipientService: RecipientService
   ) {
     this.initRegisterFormGroup();
   }
@@ -61,14 +51,14 @@ export class ReceptorComponent implements OnInit {
 
   public initRegisterFormGroup() {
     this.formGroup = this.fb.group(
-      {
-        blood_type_id: ['', Validators.compose([Validators.required])],
-        name: ['', Validators.compose([Validators.required])],
-        cell_phones: ['', Validators.compose([Validators.required])],
-        email: ['', Validators.compose([Validators.required, Validators.email])],
-        city_id: ['', Validators.compose([Validators.required])],
-        public: ['', Validators.compose([])]
-      }
+        {
+          blood_type_id: ['', Validators.compose([Validators.required])],
+          name: ['', Validators.compose([])],
+          cell_phones: ['', Validators.compose([Validators.required])],
+          email: ['', Validators.compose([Validators.email])],
+          city_id: ['', Validators.compose([Validators.required])],
+          public: [true, Validators.compose([])]
+        }
     );
   }
 
@@ -109,4 +99,14 @@ export class ReceptorComponent implements OnInit {
     );
   }
 
+
+  public getDonors(option: MatSelectChange) {
+    this.bloodTypeSelected = option.value;
+    this.recipientService.getCanReceiveFrom(option.value).subscribe(
+        (possibleDonors) => {
+          console.log(possibleDonors)
+          this.donors = possibleDonors;
+        }
+    );
+  }
 }

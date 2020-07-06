@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   isMockEnabled: true, // You have to switch this, when your real back-end is done
   authTokenKey: 'authce9d77b308c149d5992a80073637e4d5',
-  api_url: 'http://localhost:8000/api/register/'
+  api_url: 'http://localhost:8000/api/register/',
+  api_url_match: 'http://localhost:8001/api/matcher/'
 };
 
 
@@ -22,6 +23,8 @@ export const bloodTypes = [
 ];
 
 export const cities =[
+  { value: 1, display: 'Cochabamba' },
+  { value: 2, display: 'La Paz' },
   { value: 3, display: 'Santa Cruz' },
   { value: 4, display: 'Oruro' },
   { value: 5, display: 'Potosi' },
