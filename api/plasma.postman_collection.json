@@ -94,7 +94,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"recipient\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Yesi Rojas G\",\n        \"cell_phones\": \"71726777\",\n        \"email\": \"yesi.rojas.g@gmail.com\",\n        \"photo_path\": \"none\",\n        \"city_id\": 2,\n        \"public\": true\n    }\n}",
+							"raw": "{ \n    \"recipient\": {\n            \"id\": 2,\n            \"blood_type_id\": 5,\n            \"name\": \"Delia Alvarez \",\n            \"cell_phones\": \"70386272\",\n            \"email\": \"\",\n            \"photo_path\": null,\n            \"city_id\": 1,\n            \"public\": true,\n            \"verified\": true\n        }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -115,7 +115,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "2"
 								}
 							]
 						}
@@ -284,7 +284,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"donor\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Donor 1\",\n        \"cell\": \"22123\",\n        \"email\": \"donor1@gmail.com\",\n        \"city_id\": 1,\n        \"public\": true\n    }\n}",
+							"raw": "{ \n    \"donor\": {\n        \"blood_type_id\": 4,\n        \"name\": \"Donor 1\",\n        \"cell\": \"22123\",\n        \"email\": \"\",\n        \"city_id\": null,\n        \"public\": true\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -535,6 +535,88 @@
 									"key": "id",
 									"value": "2"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "matcher",
+			"item": [
+				{
+					"name": "Recepients by compatibility and city",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/recipients?compatible_with=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"recipients"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "compatible_with",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Can receive from",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/can-receive-from/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"can-receive-from",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Can Donate To",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/api/matcher/can-donate-to/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"matcher",
+								"can-donate-to",
+								"2"
 							]
 						}
 					},

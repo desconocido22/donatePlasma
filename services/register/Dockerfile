@@ -1,6 +1,4 @@
-FROM golang:alpine AS middleware
-
-ENV MIDDLEWARE_REST_PORT=8000
+FROM golang:alpine AS register
 
 # Working directory for build
 WORKDIR /build

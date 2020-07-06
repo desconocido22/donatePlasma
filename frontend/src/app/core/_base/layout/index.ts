@@ -4,7 +4,7 @@ export { OffcanvasDirective } from './directives/offcanvas.directive';
 export { ScrollTopDirective } from './directives/scroll-top.directive';
 export { TabClickEventDirective } from './directives/tab-click-event.directive';
 export { ToggleDirective } from './directives/toggle.directive';
-
+export { ImageDirective } from './directives/image.directive';
 export { ContentAnimateDirective } from './directives/content-animate.directive';
 export { HeaderDirective } from './directives/header.directive';
 export { MenuDirective } from './directives/menu.directive';

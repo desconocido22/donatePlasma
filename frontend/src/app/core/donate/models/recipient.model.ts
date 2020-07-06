@@ -8,7 +8,8 @@ export class RecipientModel {
     city_id: number;
     public: boolean;
     verified?: boolean;
-    compatible?: any[];
+    compatible_with?: string;
+    photo?: any;
     created_at?: any;
     updated_at?: any;
     deleted_at?: any;

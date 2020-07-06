@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {map, retry} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {RecipientModel} from '../models/recipient.model';
 
 @Injectable({
@@ -15,6 +15,36 @@ export class RecipientService {
   ) { }
 
 
+  public search(page: number, size: number, cityId: number, bloodType: number): Observable<any> {
+      let params = new HttpParams();
+      if (size) {
+          params = params.set('size', size.toString());
+      }
+      if (page) {
+          params = params.set('page', page.toString());
+      }
+      if (cityId) {
+          params = params.set('city', cityId.toString());
+      }
+      if(bloodType) {
+          params = params.set('compatible_with', bloodType.toString());
+      }
+      return this.http.get(environment.api_url_match + `recipients`, {params})
+          .pipe(
+              // retry(2),
+              map( (response: any) => response)
+          );
+  }
+  
+  public getCanReceiveFrom(bloodType: number): Observable<[]> {
+      return this.http.get<[]>(environment.api_url_match + `can-receive-from/${bloodType}`)
+          .pipe(
+              retry(2),
+              map( (response: any) => {
+                  return response.compatible_types
+              })
+          );
+  }
 
   public getAllPublic(): Observable<RecipientModel[]> {
     return this.http.get<RecipientModel[]>(environment.api_url + 'recipient/public')

@@ -48,15 +48,17 @@ export class DonorComponent implements OnInit {
     };
   }
 
+
+
   public initRegisterFormGroup() {
     this.formGroup = this.fb.group(
       {
         blood_type_id: ['', Validators.compose([Validators.required])],
-        name: ['', Validators.compose([Validators.required])],
+        name: ['', Validators.compose([])],
         cell: ['', Validators.compose([Validators.required])],
-        email: ['', Validators.compose([Validators.required, Validators.email])],
+        email: ['', Validators.compose([Validators.email])],
         city_id: ['', Validators.compose([Validators.required])],
-        public: ['', Validators.compose([])]
+        public: [true, Validators.compose([])]
       }
     );
   }
