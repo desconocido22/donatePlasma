@@ -15,7 +15,7 @@ export class RecipientService {
   ) { }
 
 
-  public search(page: number, size: number, cityId: number, bloodType: number): Observable<[]> {
+  public search(page: number, size: number, cityId: number, bloodType: number): Observable<any> {
       let params = new HttpParams();
       if (size) {
           params = params.set('size', size.toString());
@@ -32,7 +32,7 @@ export class RecipientService {
       return this.http.get(environment.api_url_match + `recipients`, {params})
           .pipe(
               // retry(2),
-              map( (response: any) => response.recipients)
+              map( (response: any) => response)
           );
   }
   
@@ -41,7 +41,6 @@ export class RecipientService {
           .pipe(
               retry(2),
               map( (response: any) => {
-                  console.log(response)
                   return response.compatible_types
               })
           );

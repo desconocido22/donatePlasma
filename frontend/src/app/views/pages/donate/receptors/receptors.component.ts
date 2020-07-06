@@ -60,8 +60,8 @@ export class ReceptorsComponent implements OnInit {
     this.list = this.recipientService.search(this.page, this.size, this.city, this.bloodType)
         .pipe(
             tap( result => {
-              this.total = result.length;
-              return result;
+              this.total = result.total_records;
+              return result.recipients;
             })
         );
   }
