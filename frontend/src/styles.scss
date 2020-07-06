@@ -48,7 +48,6 @@
 .brand-light {
   @import "./assets/sass/themes/layout/brand/light.scss";
 }
-
 // Aside themes
 // .aside-dark {
 //   @import "./assets/sass/themes/layout/aside/dark.scss";
@@ -88,3 +87,5 @@
 .mat-dialog-container {
   padding: 0 !important;
 }
+
+@import '~ngx-sharebuttons/themes/default/default-theme';

@@ -18,24 +18,41 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
+import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
+import { FaqComponent } from './donate/faq/faq.component';
+import { FooterPlasmaComponent } from './donate/footer-plasma/footer-plasma.component';
+import {ImageDirective} from "../../core/_base/layout";
+import {ShareModule} from "ngx-sharebuttons";
+import {MatButtonModule} from "@angular/material/button";
+import {ShareButtonModule} from "ngx-sharebuttons/button";
+import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
+import {ShareIconsModule} from "ngx-sharebuttons/icons";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
-  declarations: [DonorComponent, HomeComponent, ReceptorComponent, ReceptorsComponent, HeaderPlasmaComponent],
+    declarations: [DonorComponent, HomeComponent, ReceptorComponent, ReceptorsComponent, HeaderPlasmaComponent, FaqComponent, FooterPlasmaComponent, ImageDirective],
   exports: [],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    CoreModule,
-    PartialsModule,
-    RouterModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatInputModule,
-  ],
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        FormsModule,
+        CoreModule,
+        PartialsModule,
+        RouterModule,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        SweetAlert2Module,
+        ShareModule,
+        MatButtonModule,
+        ShareButtonModule,
+        ShareButtonsModule,
+        ShareIconsModule,
+        MatPaginatorModule
+    ],
   providers: []
 })
 export class PagesModule {

@@ -1,5 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {bloodTypes, cities} from "../../../../../environments/environment";
+import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
+import {SweetAlertOptions} from 'sweetalert2';
+import {DonorService} from "../../../../core/donate/services/donor.service";
+import {DonorModel} from "../../../../core/donate/models/donor.model";
 
 @Component({
   selector: 'kt-donor',
@@ -7,27 +12,53 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./donor.component.scss']
 })
 export class DonorComponent implements OnInit {
+  @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
+  public coolModalOption: SweetAlertOptions;
+
+  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
+  public failModalOption: SweetAlertOptions;
+
   public formGroup: FormGroup;
-  loading: boolean;
+  public bloodTypes = bloodTypes;
+  public cities = cities;
+  public loading: boolean;
+
   constructor(
     private fb: FormBuilder,
+    private donorService: DonorService
   ) {
     this.initRegisterFormGroup();
   }
 
   ngOnInit(): void {
+    this.coolModalOption = {
+      title: 'Gracias!',
+      type: 'success',
+      showCloseButton: false,
+      showConfirmButton: false,
+      timer: 5000
+    };
 
+    this.failModalOption = {
+      title: ':( Algo salio mal',
+      type: 'error',
+      showCloseButton: false,
+      showConfirmButton: false,
+      timer: 10000
+    };
   }
+
+
 
   public initRegisterFormGroup() {
     this.formGroup = this.fb.group(
       {
-        blood_type: ['', Validators.compose([Validators.required])],
-        full_name: ['', Validators.compose([Validators.required])],
-        phone: ['', Validators.compose([Validators.required])],
-        email: ['', Validators.compose([Validators.required])],
-        city: ['', Validators.compose([Validators.required])],
-        public_profile: ['', Validators.compose([Validators.required])]
+        blood_type_id: ['', Validators.compose([Validators.required])],
+        name: ['', Validators.compose([])],
+        cell: ['', Validators.compose([Validators.required])],
+        email: ['', Validators.compose([Validators.email])],
+        city_id: ['', Validators.compose([Validators.required])],
+        public: [true, Validators.compose([])]
       }
     );
   }
@@ -41,6 +72,31 @@ export class DonorComponent implements OnInit {
   }
 
   submit() {
+    const controls = this.formGroup.controls;
+    // check form
+    if (this.formGroup.invalid) {
+      Object.keys(controls).forEach(controlName =>
+          controls[controlName].markAsTouched()
+      );
+      return;
+    }
     this.loading = true;
+    const postObj = this.formGroup.getRawValue();
+    this.donorService.post(postObj).subscribe(
+        (donor: DonorModel) => {
+          this.coolModal.fire().then((result) => {
+            if (result.value) {
+            }
+          });
+          this.loading = false;
+          this.formGroup.reset();
+        },
+        error => {
+          this.failModal.fire().then((result) => {
+            if (result.value) {
+            }
+          });
+        }
+    );
   }
 }

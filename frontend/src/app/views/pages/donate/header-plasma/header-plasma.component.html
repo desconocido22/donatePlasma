@@ -11,5 +11,18 @@
   </div>
   <div class="col-12 text-center">
     <h3 [ngStyle]="{'font-size': '3rem'}">salva vidas!</h3>
+    <div class="row">
+      <div class="col-12 text-center">
+        <div class="d-inline-block">
+          <share-buttons [theme]="'default'"
+                         [include]="['facebook', 'whatsapp', 'twitter', 'sms', 'print', 'copy']"
+                         [show]="4"
+                         [size]="-4"
+                         [url]="'http://donatuplasma.org'"
+                         [autoSetMeta]="false"
+          ></share-buttons>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

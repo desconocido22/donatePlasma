@@ -66,6 +66,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import json from 'highlight.js/lib/languages/json';
 import scss from 'highlight.js/lib/languages/scss';
 import typescript from 'highlight.js/lib/languages/typescript';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelSpeed: 0.5,
@@ -123,6 +124,7 @@ export function getHighlightLanguages() {
     TranslateModule.forRoot(),
     MatProgressSpinnerModule,
     InlineSVGModule.forRoot(),
+    SweetAlert2Module.forRoot(),
     ThemeModule
   ],
   exports: [],

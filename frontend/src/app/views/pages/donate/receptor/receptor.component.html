@@ -1,5 +1,6 @@
 <div class="container">
   <kt-header-plasma></kt-header-plasma>
+  <kt-footer-plasma></kt-footer-plasma>
   <div class="row">
     <div class="col-12">
       <div class="m-5 p-5">
@@ -25,10 +26,10 @@
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
-                                <mat-select placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type">
-                                  <mat-option *ngFor="let enum of [{value:'A+', display:'A+'}, {value:'O+', display:'O+'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                                <mat-select (selectionChange)="getDonors($event)" placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type_id">
+                                  <mat-option *ngFor="let enumObj of bloodTypes" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="isControlHasError('blood_type','required')">
+                                <mat-error *ngIf="isControlHasError('blood_type_id','required')">
                                   <strong>Este campo es requerido</strong>
                                 </mat-error>
                               </mat-form-field>
@@ -41,9 +42,9 @@
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
-                                <mat-label>Tu nombre</mat-label>
-                                <input formControlName="full_name" matInput placeholder="Tu nombre (Opcional)" type="text"/>
-                                <mat-error *ngIf="isControlHasError('full_name','required')">
+                                <mat-label>Tu nombre (Opcional)</mat-label>
+                                <input formControlName="name" matInput placeholder="Tu nombre (Opcional)" type="text"/>
+                                <mat-error *ngIf="isControlHasError('name','required')">
                                   <strong>Este campo es requerido</strong>
                                 </mat-error>
                               </mat-form-field>
@@ -56,8 +57,8 @@
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
                                 <mat-label>Tu tel&eacute;fono</mat-label>
-                                <input formControlName="phone" matInput placeholder="Teléfono" type="text"/>
-                                <mat-error *ngIf="isControlHasError('phone','required')">
+                                <input formControlName="cell_phones" matInput placeholder="Teléfono" type="text"/>
+                                <mat-error *ngIf="isControlHasError('cell_phones','required')">
                                   <strong>Este campo es requerido</strong>
                                 </mat-error>
                               </mat-form-field>
@@ -69,11 +70,14 @@
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
-                                <mat-label>Tu email</mat-label>
-                                <input formControlName="email" matInput placeholder="Tu email (Si prefieres)" type="text"/>
+                                <mat-label>Tu email (Opcional)</mat-label>
+                                <input formControlName="email" matInput placeholder="Tu email (Opcional)" type="text"/>
                                 <mat-error *ngIf="isControlHasError('email','required')">
                                   <strong>Este campo es requerido</strong>
                                 </mat-error>
+                                <mat-error *ngIf="isControlHasError('email','email')">
+                                  <strong>Por favor ingrese un email v&aacute;lido</strong>
+                                </mat-error>
                               </mat-form-field>
                             </div>
                           </div>
@@ -83,10 +87,10 @@
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
-                                <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city">
-                                  <mat-option *ngFor="let enum of [{value:'cba', display:'Cochabamba'}, {value:'scz', display:'Santa Cruz'}]" value="{{ enum.value }}">{{ enum.display }}</mat-option>
+                                <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city_id">
+                                  <mat-option *ngFor="let enumObj of cities" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="isControlHasError('city','required')">
+                                <mat-error *ngIf="isControlHasError('city_id','required')">
                                   <strong>Este campo es requerido</strong>
                                 </mat-error>
                               </mat-form-field>
@@ -97,7 +101,7 @@
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
-                              <mat-checkbox formControlName="public_profile">Perfil p&uacute;blico</mat-checkbox>
+                              <mat-checkbox formControlName="public">Perfil p&uacute;blico</mat-checkbox>
                             </div>
                           </div>
                         </div>
@@ -113,14 +117,35 @@
                             <h3>Posibles Donantes</h3>
                           </div>
                           <div class="col-12">
-                            <div class="row" *ngFor="let item of list">
-                              <div class="col-2 text-right">
-                                <img class="p-1"src="./assets/media/plasma/icono-sangre-{{ item.type }}.svg" width="30px" />
-                              </div>
-                              <div class="col-8 align-middle mt-auto mb-auto">
-                                <h6>{{ item.count }} Donante<span *ngIf="item.count > 1">s</span></h6>
-                              </div>
-                            </div>
+                            <ng-container *ngIf="bloodTypeSelected">
+                              <ng-container *ngIf="donors?.length == 0">
+                                <div class="row">
+                                  <div class="col-12 text-center">
+                                    <p>Nos contactaremos contigo apenas tengamos un posible donante</p>
+                                  </div>
+                                </div>
+                              </ng-container>
+                              <ng-container *ngIf="donors?.length !== 0">
+                                <div class="row" *ngFor="let item of donors ">
+                                  <div class="col-12" >
+                                    <div class="row">
+                                      <div class="col-2">
+                                        <img class="p-1 cursor-pointer " src="./assets/media/plasma/icono-sangre-{{ item.blood_type_id }}.svg" width="30px" />
+                                      </div>
+                                      <div class="col-10 mt-5 mb-5">
+                                        <p class="d-inline-block">{{ item.count }} Donador<span *ngIf="donors.length > 1">es</span></p>
+                                      </div>
+                                    </div>
+
+
+                                  </div>
+                                </div>
+                              </ng-container>
+
+                            </ng-container>
+                            <ng-container *ngIf="!bloodTypeSelected">
+                              <p>Selecciona tu tipo de sangre</p>
+                            </ng-container>
                           </div>
                         </div>
                       </div>
@@ -130,9 +155,11 @@
                     <div class="row">
                       <div class="col-12 text-center">
                         <div class="kt-register__actions" [ngStyle]="{'margin-bottom': '0.5rem'}">
+                          <a routerLink="/home" routerLinkActive="active" class="btn btn-success mr-5">Volver
+                          </a>
                           <button [disabled]="!formGroup.valid || loading || !formGroup.dirty" (click)="submit()"
                                   [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
-                                  class="btn btn-primary btn-elevate">Reg&iacute;strame
+                                  class="btn btn-primary btn-elevate ml-5">Reg&iacute;strame
                           </button>
                         </div>
                       </div>
@@ -148,3 +175,21 @@
     </div>
   </div>
 </div>
+
+<swal
+        #coolModal
+        [swalOptions]="coolModalOption"
+>
+  <div *swalPortal>
+    :) !
+  </div>
+</swal>
+
+<swal
+        #failModal
+        [swalOptions]="failModalOption"
+>
+  <div *swalPortal>
+    Por favor intente nuevamente en un par de segundos
+  </div>
+</swal>
