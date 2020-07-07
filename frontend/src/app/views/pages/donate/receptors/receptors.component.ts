@@ -5,7 +5,7 @@ import {RecipientModel} from "../../../../core/donate/models/recipient.model";
 import {bloodTypes, cities} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
 import {MatSelectChange} from "@angular/material/select";
-import {tap} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'kt-receptors',
@@ -59,7 +59,7 @@ export class ReceptorsComponent implements OnInit {
   private getAll() {
     this.list = this.recipientService.search(this.page, this.size, this.city, this.bloodType)
         .pipe(
-            tap( result => {
+            map( result => {
               this.total = result.total_records;
               return result.recipients;
             })
