@@ -65,4 +65,11 @@ func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodeActivateRecipientRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Upload image
+	r.Methods(http.MethodPost).Path("/api/register/uploader").Handler(httptransport.NewServer(
+		endpoints.Uploader,
+		reqres.DecodeUploaderRequest,
+		reqres.EncodeResponse,
+	))
 }

@@ -126,3 +126,17 @@ func makeActivateRecipientEndpoint(s service.Service) endpoint.Endpoint {
 		}, err
 	}
 }
+
+func makeUploaderEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req, ok := request.(reqres.UploaderResquest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		return reqres.UploaderResponse{
+			Filename: req.Filename,
+			Err:      nil,
+		}, nil
+	}
+}

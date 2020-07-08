@@ -4,8 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	entities "github.com/StevenRojas/donatePlasma/services/register/pkg/service"
 	"github.com/gorilla/mux"
@@ -59,6 +63,17 @@ type DeleteRecipientResquest struct {
 // ActivateRecipientResquest activate recipient request
 type ActivateRecipientResquest struct {
 	ID int64 `json:"id,omitempty"`
+}
+
+// UploaderResquest uploader request
+type UploaderResquest struct {
+	Filename string `json:"filename"`
+}
+
+// UploaderResponse uploader request
+type UploaderResponse struct {
+	Filename string `json:"filename"`
+	Err      error  `json:"error,omitempty"`
 }
 
 // DecodeCreateRecipientRequest decode create recipient request
@@ -161,5 +176,38 @@ func DecodeActivateRecipientRequest(ctx context.Context, r *http.Request) (inter
 		return nil, errors.New("Invalid recipient ID")
 	}
 	req.ID = id
+	return req, nil
+}
+
+// DecodeUploaderRequest decode uploader request
+func DecodeUploaderRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req UploaderResquest
+	r.ParseMultipartForm(10 << 20) // Set 10Mb as max size
+	file, handler, err := r.FormFile("file_uploader")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return nil, err
+	}
+	defer file.Close()
+	contentType := handler.Header["Content-Type"][0]
+	if !strings.Contains(contentType, "image/") {
+		return nil, errors.New("Tipo de archivo no soportado")
+	}
+	ext := strings.Trim(filepath.Ext(handler.Filename), ".")
+	tempFile, err := ioutil.TempFile("../../frontend/static/images", "img-*."+ext)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer tempFile.Close()
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	tempFile.Write(fileBytes)
+
+	req.Filename = filepath.Base(tempFile.Name())
 	return req, nil
 }
