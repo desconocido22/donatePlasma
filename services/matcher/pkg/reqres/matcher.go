@@ -15,6 +15,7 @@ import (
 type GetRecipientsRequest struct {
 	BloodTypeID *int64
 	CityID      *int64
+	Query       string
 	Page        int64
 	PerPage     int64
 }
@@ -74,6 +75,11 @@ func DecodePublicRecipientListRequest(ctx context.Context, r *http.Request) (int
 		req.PerPage = perPage
 	} else {
 		req.PerPage = 30
+	}
+
+	q, ok := vars["q"]
+	if ok {
+		req.Query = q[0]
 	}
 	return req, nil
 }
