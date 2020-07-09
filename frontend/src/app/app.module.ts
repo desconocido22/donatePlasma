@@ -97,6 +97,14 @@ export function getHighlightLanguages() {
   ];
 }
 
+import {FilePondModule, registerPlugin} from 'ngx-filepond';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+registerPlugin(FilePondPluginFileValidateType);
+registerPlugin(FilePondPluginFileValidateSize);
+registerPlugin(FilePondPluginImageExifOrientation);
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -125,7 +133,8 @@ export function getHighlightLanguages() {
     MatProgressSpinnerModule,
     InlineSVGModule.forRoot(),
     SweetAlert2Module.forRoot(),
-    ThemeModule
+    ThemeModule,
+    FilePondModule
   ],
   exports: [],
   providers: [

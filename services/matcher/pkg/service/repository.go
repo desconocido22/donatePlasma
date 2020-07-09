@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"strconv"
 
 	"github.com/go-kit/kit/log"
@@ -10,10 +11,11 @@ import (
 
 // Repository interface
 type Repository interface {
-	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, page int64, perPage int64) ([]Recipient, int64, error)
+	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, q string, page int64, perPage int64) ([]Recipient, int64, error)
 	CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 	CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
-	getTotalRecipients(ctx context.Context, cityID *int64, bloodTypeID *int64) (int64, error)
+	GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error)
+	getTotalRecipients(ctx context.Context, cityID *int64, bloodTypeID *int64, q string) (int64, error)
 }
 
 type repository struct {
@@ -30,12 +32,14 @@ func NewRepository(db *sql.DB, logger log.Logger) Repository {
 }
 
 // GetRecipientList get a list of verified and public recipients
-func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, page int64, perPage int64) ([]Recipient, int64, error) {
+func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, q string, page int64, perPage int64) ([]Recipient, int64, error) {
 	start := (page - 1) * perPage
 	var sql string
 	sql = `SELECT id, blood_type_id, name, cell_numbers, email, photo_path, city_id, verified, public, created_at, updated_at, deleted_at,
-			(SELECT GROUP_CONCAT(donor_blood_type_id SEPARATOR ',') as compatible_with FROM compatibility 
-			WHERE recipient_blood_type_id = blood_type_id) as compatible_with
+			(SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT(
+				'blood_type_id', donor_blood_type_id,
+				'count', (SELECT COUNT(id) FROM donor WHERE blood_type_id = donor_blood_type_id))),
+				']') AS donors FROM compatibility WHERE recipient_blood_type_id = blood_type_id) AS donors
 			FROM recipient WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
 	if cityID != nil {
 		sql = sql + " AND city_id = " + strconv.FormatInt(*cityID, 10)
@@ -44,23 +48,32 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 		sql = sql + " AND blood_type_id IN (SELECT recipient_blood_type_id FROM compatibility WHERE donor_blood_type_id = " +
 			strconv.FormatInt(*bloodTypeID, 10) + ")"
 	}
-	sql = sql + " LIMIT " + strconv.FormatInt(start, 10) + ", " + strconv.FormatInt(perPage, 10)
+	if q != "" {
+		sql = sql + " AND (name LIKE '%" + q + "%' OR cell_numbers LIKE '" + q + "%')"
+	}
+
+	sql = sql + " ORDER BY updated_at desc LIMIT " + strconv.FormatInt(start, 10) + ", " + strconv.FormatInt(perPage, 10)
 	rows, err := repo.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, 0, err
 	}
+
 	list := []Recipient{}
 	for rows.Next() {
 		var recipient Recipient
+		var potentialDonors string
 		err = rows.Scan(&recipient.ID, &recipient.BloodTypeID, &recipient.Name, &recipient.CellPhones,
 			&recipient.Email, &recipient.PhotoPath, &recipient.CityID, &recipient.Verified, &recipient.Public,
-			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt, &recipient.CompatibleWith)
+			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt, &potentialDonors)
 		if err != nil {
 			return nil, 0, err
 		}
+		donors := make([]CompatibleBloodCount, 0)
+		json.Unmarshal([]byte(potentialDonors), &donors)
+		recipient.PotentialDonors = donors
 		list = append(list, recipient)
 	}
-	total, _ := repo.getTotalRecipients(ctx, cityID, bloodTypeID)
+	total, _ := repo.getTotalRecipients(ctx, cityID, bloodTypeID, q)
 	return list, total, nil
 }
 
@@ -104,8 +117,30 @@ func (repo *repository) CanDonateTo(ctx context.Context, bloodTypeID int64) ([]C
 	return list, nil
 }
 
+// GetDonorList returns public donors compatible with a blood type
+func (repo *repository) GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error) {
+	sql := `SELECT * FROM donor WHERE blood_type_id = ` + strconv.FormatInt(bloodTypeID, 10) + `
+		AND public = 1 AND verified = 1 AND deleted_at IS NULL ORDER BY updated_at DESC`
+	rows, err := repo.db.QueryContext(ctx, sql)
+	if err != nil {
+		return nil, err
+	}
+	list := []Donor{}
+	for rows.Next() {
+		var donor Donor
+		err = rows.Scan(&donor.ID, &donor.BloodTypeID, &donor.Name, &donor.Cell,
+			&donor.Email, &donor.CityID, &donor.Verified, &donor.Public,
+			&donor.CreatedAt, &donor.UpdatedAt, &donor.DeletedAt)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, donor)
+	}
+	return list, nil
+}
+
 // getTotalRecipients get a count of verified and public recipients
-func (repo *repository) getTotalRecipients(ctx context.Context, cityID *int64, bloodTypeID *int64) (int64, error) {
+func (repo *repository) getTotalRecipients(ctx context.Context, cityID *int64, bloodTypeID *int64, q string) (int64, error) {
 	var sql string
 	sql = `SELECT count(id) as c FROM recipient WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
 	if cityID != nil {
@@ -114,6 +149,9 @@ func (repo *repository) getTotalRecipients(ctx context.Context, cityID *int64, b
 	if bloodTypeID != nil {
 		sql = sql + " AND blood_type_id IN (SELECT recipient_blood_type_id FROM compatibility WHERE donor_blood_type_id = " +
 			strconv.FormatInt(*bloodTypeID, 10) + ")"
+	}
+	if q != "" {
+		sql = sql + " AND (name LIKE '%" + q + "%' OR cell_numbers LIKE '" + q + "%')"
 	}
 	result, err := repo.db.QueryContext(ctx, sql)
 	if err != nil {

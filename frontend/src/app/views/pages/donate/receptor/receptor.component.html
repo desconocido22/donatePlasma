@@ -105,13 +105,13 @@
                             </div>
                           </div>
                         </div>
-    
+
                       </div>
 
                       <div class="col-12 col-sm-4">
                         <div class="row">
                           <div class="w-100">
-                            
+
                           </div>
                           <div class="col-12">
                             <h3>Posibles Donantes</h3>
@@ -129,11 +129,11 @@
                                 <div class="row" *ngFor="let item of donors ">
                                   <div class="col-12" >
                                     <div class="row">
-                                      <div class="col-2">
+                                      <div class="col-2 text-right">
                                         <img class="p-1 cursor-pointer " src="./assets/media/plasma/icono-sangre-{{ item.blood_type_id }}.svg" width="30px" />
                                       </div>
-                                      <div class="col-10 mt-5 mb-5">
-                                        <p class="d-inline-block">{{ item.count }} Donador<span *ngIf="donors.length > 1">es</span></p>
+                                      <div class="col-10 mt-5 mb-1">
+                                        <p class="d-inline-block mt-3">{{ item.count }} Donador<span *ngIf="item.count != 1">es</span></p>
                                       </div>
                                     </div>
 
@@ -150,13 +150,22 @@
                         </div>
                       </div>
                     </div>
-
+                    <div class="row">
+                      <div class="col-12">
+                        <p>Puede subir una imag&eacute;n si asi lo desea</p>
+                        <file-pond #myPond
+                                   [options]="pondOptions"
+                                   [files]="pondFiles"
+                                   (onprocessfile)="processFile($event)">
+                        </file-pond>
+                      </div>
+                    </div>
 
                     <div class="row">
                       <div class="col-12 text-center">
                         <div class="kt-register__actions" [ngStyle]="{'margin-bottom': '0.5rem'}">
-                          <a routerLink="/home" routerLinkActive="active" class="btn btn-success mr-5">Volver
-                          </a>
+                          <a routerLink="/" routerLinkActive="active" class="btn btn-danger mr-5">Quitarme de la lista</a>
+                          <a routerLink="/home" routerLinkActive="active" class="btn btn-success mr-5">Volver</a>
                           <button [disabled]="!formGroup.valid || loading || !formGroup.dirty" (click)="submit()"
                                   [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
                                   class="btn btn-primary btn-elevate ml-5">Reg&iacute;strame

@@ -15,6 +15,7 @@ import (
 type GetRecipientsRequest struct {
 	BloodTypeID *int64
 	CityID      *int64
+	Query       string
 	Page        int64
 	PerPage     int64
 }
@@ -35,6 +36,12 @@ type BloodTypeRequest struct {
 type CompatibleBloodTypeResponse struct {
 	Compatible []entities.CompatibleBloodCount `json:"compatible_types"`
 	Err        error                           `json:"error,omitempty"`
+}
+
+// GetDonorResponse Get a list of recipients
+type GetDonorResponse struct {
+	Donors []entities.Donor `json:"donors"`
+	Err    error            `json:"error,omitempty"`
 }
 
 // DecodeBloodTypeRequest decode blood type request
@@ -74,6 +81,11 @@ func DecodePublicRecipientListRequest(ctx context.Context, r *http.Request) (int
 		req.PerPage = perPage
 	} else {
 		req.PerPage = 30
+	}
+
+	q, ok := vars["q"]
+	if ok {
+		req.Query = q[0]
 	}
 	return req, nil
 }
