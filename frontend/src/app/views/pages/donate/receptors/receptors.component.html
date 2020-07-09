@@ -12,7 +12,15 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
                                         <div class="row">
-                                            <div class="col-8">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <mat-form-field class="input-full-width w-100">
+                                                        <mat-label>Nombre</mat-label>
+                                                        <input #query (keyup)="setQuery(query.value)" formControlName="query" matInput placeholder="Nombre" type="text"/>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
                                                 <div class="form-group">
                                                     <mat-form-field class="input-full-width w-100">
                                                         <mat-select (selectionChange)="setCity($event)" placeholder="Tu ciudad" aria-label="Tu ciudad"
@@ -27,8 +35,8 @@
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <mat-form-field class="input-full-width w-100">
-                                                        <mat-select (selectionChange)="setBloodType($event)" placeholder="Tipo de sangre"
-                                                                    aria-label="Tipo de sangre"
+                                                        <mat-select (selectionChange)="setBloodType($event)" placeholder="Plasma compatible con"
+                                                                    aria-label="Plasma compatible con"
                                                                     formControlName="blood_type">
                                                             <mat-option value="0">Todos</mat-option>
                                                             <mat-option *ngFor="let enumObj of bloodTypes"

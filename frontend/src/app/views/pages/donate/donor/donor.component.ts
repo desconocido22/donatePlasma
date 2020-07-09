@@ -5,6 +5,8 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {SweetAlertOptions} from 'sweetalert2';
 import {DonorService} from "../../../../core/donate/services/donor.service";
 import {DonorModel} from "../../../../core/donate/models/donor.model";
+import {Router} from "@angular/router";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'kt-donor',
@@ -22,8 +24,11 @@ export class DonorComponent implements OnInit {
   public bloodTypes = bloodTypes;
   public cities = cities;
   public loading: boolean;
+  public receptors: any[];
+  public bloodTypeSelected: number;
 
   constructor(
+    private router: Router,
     private fb: FormBuilder,
     private donorService: DonorService
   ) {
@@ -57,8 +62,18 @@ export class DonorComponent implements OnInit {
         name: ['', Validators.compose([])],
         cell: ['', Validators.compose([Validators.required])],
         email: ['', Validators.compose([Validators.email])],
-        city_id: ['', Validators.compose([Validators.required])],
+        city_id: ['', Validators.compose([])],
         public: [true, Validators.compose([])]
+      }
+    );
+  }
+
+  public getReceptors(option: MatSelectChange) {
+    this.bloodTypeSelected = option.value;
+    this.donorService.getCanReceiveFrom(option.value).subscribe(
+      (possibleDonors) => {
+        console.log(possibleDonors)
+        this.receptors = possibleDonors;
       }
     );
   }
@@ -90,6 +105,14 @@ export class DonorComponent implements OnInit {
           });
           this.loading = false;
           this.formGroup.reset();
+          const queryParams = {
+            bt: postObj.blood_type_id,
+          };
+          if (postObj.city_id && postObj.city_id !== 0) {
+            // @ts-ignore
+            queryParams.city = postObj.city_id
+          }
+          this.router.navigate(['/receptores'], {queryParams});
         },
         error => {
           this.failModal.fire().then((result) => {

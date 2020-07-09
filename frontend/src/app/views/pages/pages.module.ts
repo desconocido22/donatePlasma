@@ -28,6 +28,7 @@ import {ShareButtonModule} from "ngx-sharebuttons/button";
 import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
 import {ShareIconsModule} from "ngx-sharebuttons/icons";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {FilePondModule} from "ngx-filepond";
 
 @NgModule({
     declarations: [DonorComponent, HomeComponent, ReceptorComponent, ReceptorsComponent, HeaderPlasmaComponent, FaqComponent, FooterPlasmaComponent, ImageDirective],
@@ -51,7 +52,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
         ShareButtonModule,
         ShareButtonsModule,
         ShareIconsModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        FilePondModule
     ],
   providers: []
 })

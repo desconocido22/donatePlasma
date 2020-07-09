@@ -29,6 +29,16 @@ export class DonorService {
           );
   }
 
+  public getCanReceiveFrom(bloodType: number): Observable<[]> {
+    return this.http.get<[]>(environment.api_url_match + `can-donate-to/${bloodType}`)
+      .pipe(
+        retry(2),
+        map((response: any) => {
+          return response.compatible_types
+        })
+      );
+  }
+
   public get(donorId: number): Observable<DonorModel> {
     return this.http.get<DonorModel>(environment.api_url + 'donor/' + donorId)
         .pipe(
