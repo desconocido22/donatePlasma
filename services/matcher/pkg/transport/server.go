@@ -39,6 +39,13 @@ func setPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodeBloodTypeRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Get a list of public donors with plasma compatibility
+	r.Methods(http.MethodGet).Path("/api/matcher/donors/{typeId}").Handler(httptransport.NewServer(
+		endpoints.GetPublicDonors,
+		reqres.DecodeBloodTypeRequest,
+		reqres.EncodeResponse,
+	))
 }
 
 func middleware(next http.Handler) http.Handler {

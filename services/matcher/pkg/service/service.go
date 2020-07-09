@@ -11,6 +11,7 @@ type Service interface {
 	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, q string, page int64, perPage int64) ([]Recipient, int64, error)
 	CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 	CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
+	GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error)
 }
 
 type service struct {
@@ -47,5 +48,13 @@ func (s service) CanDonateTo(ctx context.Context, bloodTypeID int64) ([]Compatib
 
 	logger.Log("msg", "Can Donate To")
 	response, err := s.repository.CanDonateTo(ctx, bloodTypeID)
+	return response, err
+}
+
+func (s service) GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error) {
+	logger := log.With(s.logger, "msg", "GetDonorList")
+
+	logger.Log("msg", "Get Donor List")
+	response, err := s.repository.GetDonorList(ctx, bloodTypeID)
 	return response, err
 }

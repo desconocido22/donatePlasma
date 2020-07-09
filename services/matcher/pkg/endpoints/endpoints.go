@@ -13,6 +13,7 @@ type Endpoints struct {
 	GetPublicRecipients endpoint.Endpoint
 	CanReceiveFrom      endpoint.Endpoint
 	CanDonateTo         endpoint.Endpoint
+	GetPublicDonors     endpoint.Endpoint
 }
 
 // MakeEndpoints create endpoints
@@ -21,6 +22,7 @@ func MakeEndpoints(s service.Service) Endpoints {
 		GetPublicRecipients: makeGetPublicRecipientsEndpoint(s),
 		CanReceiveFrom:      makeCanReceiveFromEndpoint(s),
 		CanDonateTo:         makeCanDonateToEndpoint(s),
+		GetPublicDonors:     makeGetPublicDonorsEndpoint(s),
 	}
 }
 
@@ -57,6 +59,18 @@ func makeCanDonateToEndpoint(s service.Service) endpoint.Endpoint {
 		return reqres.CompatibleBloodTypeResponse{
 			Compatible: count,
 			Err:        err,
+		}, err
+	}
+}
+
+func makeGetPublicDonorsEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req, _ := request.(reqres.BloodTypeRequest)
+		donors, err := s.GetDonorList(ctx, req.BloodTypeID)
+
+		return reqres.GetDonorResponse{
+			Donors: donors,
+			Err:    err,
 		}, err
 	}
 }
