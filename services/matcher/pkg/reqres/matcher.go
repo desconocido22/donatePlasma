@@ -38,6 +38,12 @@ type CompatibleBloodTypeResponse struct {
 	Err        error                           `json:"error,omitempty"`
 }
 
+// GetDonorResponse Get a list of recipients
+type GetDonorResponse struct {
+	Donors []entities.Donor `json:"donors"`
+	Err    error            `json:"error,omitempty"`
+}
+
 // DecodeBloodTypeRequest decode blood type request
 func DecodeBloodTypeRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var req BloodTypeRequest

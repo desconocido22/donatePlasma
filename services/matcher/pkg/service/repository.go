@@ -14,6 +14,7 @@ type Repository interface {
 	GetRecipientList(ctx context.Context, cityID *int64, bloodTypeID *int64, q string, page int64, perPage int64) ([]Recipient, int64, error)
 	CanReceiveFrom(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
 	CanDonateTo(ctx context.Context, bloodTypeID int64) ([]CompatibleBloodCount, error)
+	GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error)
 	getTotalRecipients(ctx context.Context, cityID *int64, bloodTypeID *int64, q string) (int64, error)
 }
 
@@ -112,6 +113,28 @@ func (repo *repository) CanDonateTo(ctx context.Context, bloodTypeID int64) ([]C
 			return nil, err
 		}
 		list = append(list, count)
+	}
+	return list, nil
+}
+
+// GetDonorList returns public donors compatible with a blood type
+func (repo *repository) GetDonorList(ctx context.Context, bloodTypeID int64) ([]Donor, error) {
+	sql := `SELECT * FROM donor WHERE blood_type_id = ` + strconv.FormatInt(bloodTypeID, 10) + `
+		AND public = 1 AND verified = 1 AND deleted_at IS NULL ORDER BY updated_at DESC`
+	rows, err := repo.db.QueryContext(ctx, sql)
+	if err != nil {
+		return nil, err
+	}
+	list := []Donor{}
+	for rows.Next() {
+		var donor Donor
+		err = rows.Scan(&donor.ID, &donor.BloodTypeID, &donor.Name, &donor.Cell,
+			&donor.Email, &donor.CityID, &donor.Verified, &donor.Public,
+			&donor.CreatedAt, &donor.UpdatedAt, &donor.DeletedAt)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, donor)
 	}
 	return list, nil
 }
