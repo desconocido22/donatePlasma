@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"strconv"
 
 	"github.com/go-kit/kit/log"
@@ -34,8 +35,10 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 	start := (page - 1) * perPage
 	var sql string
 	sql = `SELECT id, blood_type_id, name, cell_numbers, email, photo_path, city_id, verified, public, created_at, updated_at, deleted_at,
-			(SELECT GROUP_CONCAT(donor_blood_type_id SEPARATOR ',') as compatible_with FROM compatibility 
-			WHERE recipient_blood_type_id = blood_type_id) as compatible_with
+			(SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT(
+				'blood_type_id', donor_blood_type_id,
+				'count', (SELECT COUNT(id) FROM donor WHERE blood_type_id = donor_blood_type_id))),
+				']') AS donors FROM compatibility WHERE recipient_blood_type_id = blood_type_id) AS donors
 			FROM recipient WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
 	if cityID != nil {
 		sql = sql + " AND city_id = " + strconv.FormatInt(*cityID, 10)
@@ -48,20 +51,25 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 		sql = sql + " AND (name LIKE '%" + q + "%' OR cell_numbers LIKE '" + q + "%')"
 	}
 
-	sql = sql + " LIMIT " + strconv.FormatInt(start, 10) + ", " + strconv.FormatInt(perPage, 10)
+	sql = sql + " ORDER BY updated_at desc LIMIT " + strconv.FormatInt(start, 10) + ", " + strconv.FormatInt(perPage, 10)
 	rows, err := repo.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, 0, err
 	}
+
 	list := []Recipient{}
 	for rows.Next() {
 		var recipient Recipient
+		var potentialDonors string
 		err = rows.Scan(&recipient.ID, &recipient.BloodTypeID, &recipient.Name, &recipient.CellPhones,
 			&recipient.Email, &recipient.PhotoPath, &recipient.CityID, &recipient.Verified, &recipient.Public,
-			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt, &recipient.CompatibleWith)
+			&recipient.CreatedAt, &recipient.UpdatedAt, &recipient.DeletedAt, &potentialDonors)
 		if err != nil {
 			return nil, 0, err
 		}
+		donors := make([]CompatibleBloodCount, 0)
+		json.Unmarshal([]byte(potentialDonors), &donors)
+		recipient.PotentialDonors = donors
 		list = append(list, recipient)
 	}
 	total, _ := repo.getTotalRecipients(ctx, cityID, bloodTypeID, q)
