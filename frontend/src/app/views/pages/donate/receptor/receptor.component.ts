@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {bloodTypes, cities} from "../../../../../environments/environment";
-import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
-import {SweetAlertOptions} from "sweetalert2";
-import {RecipientService} from "../../../../core/donate/services/recipient.service";
-import {RecipientModel} from "../../../../core/donate/models/recipient.model";
-import {MatSelectChange} from "@angular/material/select";
+import {bloodTypes, cities, environment} from '../../../../../environments/environment';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {SweetAlertOptions} from 'sweetalert2';
+import {RecipientService} from '../../../../core/donate/services/recipient.service';
+import {RecipientModel} from '../../../../core/donate/models/recipient.model';
+import {MatSelectChange} from '@angular/material/select';
 
 @Component({
   selector: 'kt-receptor',
@@ -13,6 +13,11 @@ import {MatSelectChange} from "@angular/material/select";
   styleUrls: ['./receptor.component.scss']
 })
 export class ReceptorComponent implements OnInit {
+  public pondFiles = [];
+  public lastFileAdd = '';
+  public pondOptions = this.optionsFile();
+  @ViewChild('myPond', { static: false }) myPond: any;
+
   public coolModalOption: SweetAlertOptions;
   public failModalOption: SweetAlertOptions;
   public formGroup: FormGroup;
@@ -21,6 +26,7 @@ export class ReceptorComponent implements OnInit {
   public loading: boolean;
   public donors: any[];
   public bloodTypeSelected: number;
+
   @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
   @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
 
@@ -56,7 +62,7 @@ export class ReceptorComponent implements OnInit {
           name: ['', Validators.compose([])],
           cell_phones: ['', Validators.compose([Validators.required])],
           email: ['', Validators.compose([Validators.email])],
-          city_id: ['', Validators.compose([Validators.required])],
+          city_id: ['', Validators.compose([])],
           public: [true, Validators.compose([])]
         }
     );
@@ -81,6 +87,7 @@ export class ReceptorComponent implements OnInit {
     }
     this.loading = true;
     const postObj = this.formGroup.getRawValue();
+    postObj.photo_path = this.lastFileAdd;
     this.recipientService.post(postObj).subscribe(
         (donor: RecipientModel) => {
           this.coolModal.fire().then((result) => {
@@ -108,5 +115,74 @@ export class ReceptorComponent implements OnInit {
           this.donors = possibleDonors;
         }
     );
+  }
+
+  /**
+   * Configuration uploader
+   *  @return configuration filepond
+   */
+  public optionsFile() {
+    const token = 123;
+    return {
+      class: 'poi-file_uploader',
+      multiple: false,
+      labelIdle: 'Arrastre y suelte el archivo aquí o puede  <a class="link"> buscarlos </a>',
+      acceptedFileTypes: 'image/*',
+      instantUpload: true,
+      maxFileSize: '5MB',
+      allowRevert: false,
+      server: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          token
+        },
+        // ADD endpoit for upload photo
+        process: (fieldName, file, metadata, load, error, progress, abort) => {
+          const formData = new FormData();
+          formData.append('file_uploader', file, file.name);
+          const request = new XMLHttpRequest();
+          request.open('POST', environment.api_url_simple + '/api/register/uploader');
+          // request.setRequestHeader('Authorization', `Bearer ${token}`);
+          // request.setRequestHeader('token', String(token));
+          request.upload.onprogress = (e) => {
+            progress(e.lengthComputable, e.loaded, e.total);
+          };
+          request.onload = () => {
+            this.requestOnLoad(load, request, error);
+          };
+          request.send(formData);
+          return {
+            abort: () => {
+              request.abort();
+              abort();
+            }
+          };
+        },
+        revert: false
+      },
+      onremovefile: (error, file) => {
+        this.lastFileAdd = '';
+        // Use this method for remove file after upload, remove from server
+        console.log(error, file);
+      }
+    };
+  }
+
+  /**
+   * Remove File after upload document
+   * @param event filepond event
+   */
+  public processFile(event: any) {
+  }
+
+  private requestOnLoad(load: any, request: any, error: any) {
+    if (request.status >= 200 && request.status < 300) {
+      const response = JSON.parse(request.responseText);
+      this.lastFileAdd = response.filename;
+      console.log(this.lastFileAdd);
+      load(request.responseText);
+    } else {
+      error('El servicio no esta Disponible en este momento');
+    }
   }
 }
