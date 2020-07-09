@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RecipientService} from '../../../../core/donate/services/recipient.service';
 import {RecipientModel} from '../../../../core/donate/models/recipient.model';
@@ -6,7 +6,10 @@ import {bloodTypes, cities} from '../../../../../environments/environment';
 import {Observable} from 'rxjs';
 import {MatSelectChange} from '@angular/material/select';
 import {map} from 'rxjs/operators';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router} from '@angular/router';
+import {SweetAlertOptions} from 'sweetalert2';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {DonorService} from '../../../../core/donate/services/donor.service';
 
 @Component({
   selector: 'kt-receptors',
@@ -14,6 +17,9 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./receptors.component.scss']
 })
 export class ReceptorsComponent implements OnInit {
+  @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
+  public coolModalOption: SweetAlertOptions;
+
   public formGroup: FormGroup;
   public list: Observable<RecipientModel[]>;
   public bloodTypes = bloodTypes;
@@ -25,21 +31,30 @@ export class ReceptorsComponent implements OnInit {
   public query = '';
   public city = 0;
   public bloodType = 0;
-
   public total = 0;
 
+  public donors = [];
+
+  bloodTypeSelected = '';
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
-    private recipientService: RecipientService
+    private recipientService: RecipientService,
+    private donorService: DonorService
   ) {
     this.initRegisterFormGroup();
 
   }
 
   ngOnInit(): void {
+    this.coolModalOption = {
+      title: '',
+      showCloseButton: true,
+      showConfirmButton: false
+    };
+
     this.route.params.subscribe(params => {
       this.activatedRoute.queryParams.subscribe(queryParams => {
         if (queryParams.bt) {
@@ -58,6 +73,20 @@ export class ReceptorsComponent implements OnInit {
       });
     });
   }
+
+  public showDonors(bloodType: any) {
+    this.donorService.getDonorsByBloodType(bloodType).subscribe(
+      (list) => {
+        this.donors = list;
+        this.bloodTypeSelected = bloodType;
+        this.coolModal.fire().then((result) => {
+          if (result.value) {
+          }
+        });
+      }
+    );
+  }
+
 
   public initRegisterFormGroup() {
     this.formGroup = this.fb.group(

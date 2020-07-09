@@ -7,6 +7,7 @@ WORKDIR /build
 COPY go.mod .
 #COPY go.sum .
 RUN go mod download
+RUN mkdir -p /frontend/static/images
 
 # Build the code to get the binary (register)
 COPY . .

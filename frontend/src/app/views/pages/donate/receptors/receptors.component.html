@@ -101,9 +101,14 @@
                                                     </div>
                                                     <div class="col-12">
                                                         Podr&iacute;a recibir plasma de: <br>
-                                                        <img class="p-1" *ngFor="let compatible of item.compatible_with.split(',')"
-                                                             src="./assets/media/plasma/icono-sangre-{{ compatible }}.svg"
-                                                             width="34px"/>
+                                                        <div class="row justify-content-end">
+                                                            <div *ngFor="let compatible of item.potential_donors" class="col-1 cursor-pointer" (click)="showDonors(compatible.blood_type_id)">
+                                                                <img class="p-1"
+                                                                     src="./assets/media/plasma/icono-sangre-{{ compatible.blood_type_id }}.svg"
+                                                                     width="34px"/>
+                                                                <p>{{ compatible.count}}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -126,3 +131,35 @@
         </div>
     </div>
 </div>
+
+<swal
+    #coolModal
+    [swalOptions]="coolModalOption"
+>
+    <div *swalPortal>
+        <h1><img class="p-1"
+                 src="./assets/media/plasma/icono-sangre-{{ bloodTypeSelected }}.svg"
+                 width="34px"/></h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Telefono</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngIf="donors.length > 0">
+                <tr *ngFor="let donor of donors">
+                    <td>{{ donor.name }}</td>
+                    <td>{{ donor.cell }}</td>
+                </tr>
+            </ng-container>
+            <ng-container *ngIf="donors.length === 0">
+                <tr>
+                    <td colspan="2"><div class="w-100 text-center"> Sin resultados para este tipo de sangre</div></td>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+    </div>
+</swal>
