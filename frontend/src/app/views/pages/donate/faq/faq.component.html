@@ -118,10 +118,13 @@
             <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                 <div class="form-group">
                     <mat-form-field class="input-full-width w-100">
-                        <mat-label>Nombre o email (opcional)</mat-label>
-                        <input formControlName="alias" matInput placeholder="Nombre o email (opcional)" type="text"/>
+                        <mat-label>Email</mat-label>
+                        <input formControlName="alias" matInput placeholder="Email" type="text"/>
                         <mat-error *ngIf="isControlHasErrorCool('alias','required')">
                             <strong>Este campo es requerido</strong>
+                        </mat-error>
+                        <mat-error *ngIf="isControlHasErrorCool('alias','email')">
+                            <strong>Por favor ingrese un email v&aacute;lido</strong>
                         </mat-error>
                     </mat-form-field>
                 </div>

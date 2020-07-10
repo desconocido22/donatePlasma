@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {map, retry} from 'rxjs/operators';
@@ -15,6 +15,32 @@ export class DonorService {
     private http: HttpClient
   ) {
   }
+
+
+  public search(page: number, size: number, cityId: number, bloodType: number, query: string): Observable<any> {
+    let params = new HttpParams();
+    if (query && query !== '') {
+      params = params.set('q', query);
+    }
+    if (size) {
+      params = params.set('size', size.toString());
+    }
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+    if (cityId && cityId !== 0) {
+      params = params.set('city', cityId.toString());
+    }
+    if (bloodType && bloodType !== 0) {
+      params = params.set('compatible_with', bloodType.toString());
+    }
+    return this.http.get(environment.api_url + `donor/public`, {params})
+      .pipe(
+        retry(2),
+        map((response: any) => response)
+      );
+  }
+
 
   public getDonorsByBloodType(bloodTypeId: number): Observable<any> {
     return this.http.get(environment.api_url_match + `donors/${bloodTypeId}`)
@@ -74,11 +100,11 @@ export class DonorService {
       );
   }
 
-  public delete(donor: DonorModel): Observable<DonorModel> {
-    return this.http.delete<DonorModel>(environment.api_url + 'donor/' + donor.id)
+  public delete(donorId: number): Observable<any> {
+    return this.http.delete<any>(environment.api_url + `donor/${donorId}`)
       .pipe(
         retry(2),
-        map(response => donor)
+        map(response => donorId)
       );
   }
 
