@@ -30,32 +30,34 @@ import {ShareIconsModule} from "ngx-sharebuttons/icons";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {FilePondModule} from "ngx-filepond";
 import { DonorsComponent } from './donate/donors/donors.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
     declarations: [DonorComponent, HomeComponent, ReceptorComponent, ReceptorsComponent, HeaderPlasmaComponent, FaqComponent, FooterPlasmaComponent, ImageDirective, DonorsComponent],
   exports: [],
-    imports: [
-        CommonModule,
-        HttpClientModule,
-        FormsModule,
-        CoreModule,
-        PartialsModule,
-        RouterModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        SweetAlert2Module,
-        ShareModule,
-        MatButtonModule,
-        ShareButtonModule,
-        ShareButtonsModule,
-        ShareIconsModule,
-        MatPaginatorModule,
-        FilePondModule
-    ],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+    CoreModule,
+    PartialsModule,
+    RouterModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    SweetAlert2Module,
+    ShareModule,
+    MatButtonModule,
+    ShareButtonModule,
+    ShareButtonsModule,
+    ShareIconsModule,
+    MatPaginatorModule,
+    FilePondModule,
+    MatTabsModule
+  ],
   providers: []
 })
 export class PagesModule {

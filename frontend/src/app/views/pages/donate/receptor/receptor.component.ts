@@ -121,7 +121,6 @@ export class ReceptorComponent implements OnInit {
     this.bloodTypeSelected = option.value;
     this.recipientService.getCanReceiveFrom(option.value).subscribe(
         (possibleDonors) => {
-          console.log(possibleDonors)
           this.donors = possibleDonors;
         }
     );
@@ -173,7 +172,6 @@ export class ReceptorComponent implements OnInit {
       onremovefile: (error, file) => {
         this.lastFileAdd = '';
         // Use this method for remove file after upload, remove from server
-        console.log(error, file);
       }
     };
   }
@@ -196,7 +194,6 @@ export class ReceptorComponent implements OnInit {
     if (request.status >= 200 && request.status < 300) {
       const response = JSON.parse(request.responseText);
       this.lastFileAdd = response.filename;
-      console.log(this.lastFileAdd);
       load(request.responseText);
     } else {
       error('El servicio no esta Disponible en este momento');

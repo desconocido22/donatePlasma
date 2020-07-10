@@ -1,18 +1,19 @@
 <div class="container">
   <kt-header-plasma></kt-header-plasma>
-  <kt-footer-plasma></kt-footer-plasma>
   <div class="row">
     <div class="col-12">
       <div class="m-5 p-5">
         <div class="kt-register__form">
+          <kt-footer-plasma></kt-footer-plasma>
           <kt-portlet [class]="'kt-portlet--height-fluid'" [ngStyle]="{'width': '100%'}">
             <kt-portlet-body>
               <div class="row">
                 <div class="col-12 col-sm-12">
-                  <form [formGroup]="formGroup" autocomplete="off" class="kt-register__form kt-form w-100" [ngStyle]="{'margin': 'auto'}">
+                  <form [formGroup]="formGroup" autocomplete="off" class="kt-register__form kt-form w-100"
+                        [ngStyle]="{'margin': 'auto'}">
                     <div class="row">
                       <div class="col-3 p-5 text-right">
-                        <img src="./assets/media/plasma/icono-recibe.svg" width="84px" height="84px" />
+                        <img src="./assets/media/plasma/icono-recibe.svg" width="84px" height="84px"/>
                       </div>
                       <div class="col-9 m-auto p-5 align-items-center h-100">
                         <h3>Registrate para que podamos ayudarte a consegir donanates</h3>
@@ -26,8 +27,10 @@
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
-                                <mat-select (selectionChange)="getDonors($event)" placeholder="Tipo de sangre" aria-label="Tipo de sangre" formControlName="blood_type_id">
-                                  <mat-option *ngFor="let enumObj of bloodTypes" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
+                                <mat-select (selectionChange)="getDonors($event)" placeholder="Tipo de sangre"
+                                            aria-label="Tipo de sangre" formControlName="blood_type_id">
+                                  <mat-option *ngFor="let enumObj of bloodTypes"
+                                              value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="isControlHasError('blood_type_id','required')">
                                   <strong>Este campo es requerido</strong>
@@ -36,8 +39,8 @@
                             </div>
                           </div>
                         </div>
-    
-    
+
+
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
@@ -51,7 +54,7 @@
                             </div>
                           </div>
                         </div>
-    
+
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
@@ -65,7 +68,7 @@
                             </div>
                           </div>
                         </div>
-    
+
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
@@ -82,13 +85,14 @@
                             </div>
                           </div>
                         </div>
-    
+
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
                               <mat-form-field class="input-full-width w-100">
                                 <mat-select placeholder="Tu ciudad" aria-label="Tu ciudad" formControlName="city_id">
-                                  <mat-option *ngFor="let enumObj of cities" value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
+                                  <mat-option *ngFor="let enumObj of cities"
+                                              value="{{ enumObj.value }}">{{ enumObj.display }}</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="isControlHasError('city_id','required')">
                                   <strong>Este campo es requerido</strong>
@@ -97,7 +101,7 @@
                             </div>
                           </div>
                         </div>
-    
+
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
@@ -109,7 +113,8 @@
                         <div class="row">
                           <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
                             <div class="form-group">
-                              <mat-checkbox formControlName="tandc">Acepto los T&eacute;rminos y condiciones <i class="fa fa-question-circle" (click)="openTCModal()"></i></mat-checkbox>
+                              <mat-checkbox formControlName="tandc">Acepto los T&eacute;rminos y condiciones <i
+                                  class="fa fa-question-circle" (click)="openTCModal()"></i></mat-checkbox>
                               <mat-error *ngIf="isControlHasError('city_id','requiredTrue')">
                                 <strong>Es necesario que acepte los t&eacute;rminos y condiciones</strong>
                               </mat-error>
@@ -138,13 +143,16 @@
                               </ng-container>
                               <ng-container *ngIf="donors?.length !== 0">
                                 <div class="row" *ngFor="let item of donors ">
-                                  <div class="col-12" >
+                                  <div class="col-12">
                                     <div class="row">
                                       <div class="col-2 text-right">
-                                        <img class="p-1 cursor-pointer " src="./assets/media/plasma/icono-sangre-{{ item.blood_type_id }}.svg" width="30px" />
+                                        <img class="p-1 cursor-pointer "
+                                             src="./assets/media/plasma/icono-sangre-{{ item.blood_type_id }}.svg"
+                                             width="30px"/>
                                       </div>
                                       <div class="col-10 mt-5 mb-1">
-                                        <p class="d-inline-block mt-3">{{ item.count }} Donador<span *ngIf="item.count != 1">es</span></p>
+                                        <p class="d-inline-block mt-3">{{ item.count }} Donador<span
+                                            *ngIf="item.count != 1">es</span></p>
                                       </div>
                                     </div>
 
@@ -197,8 +205,8 @@
 </div>
 
 <swal
-        #coolModal
-        [swalOptions]="coolModalOption"
+    #coolModal
+    [swalOptions]="coolModalOption"
 >
   <div *swalPortal>
     :) !
@@ -206,8 +214,8 @@
 </swal>
 
 <swal
-        #failModal
-        [swalOptions]="failModalOption"
+    #failModal
+    [swalOptions]="failModalOption"
 >
   <div *swalPortal>
     Por favor intente nuevamente en un par de segundos
@@ -219,6 +227,22 @@
     [swalOptions]="tcModalOption"
 >
   <div *swalPortal>
-    <p>Text here</p>
+    <div class="text-justify">
+      <p>donatuplasma.org es una plataforma sin fines de lucro que permite a personas que requieren plasma hiperinmune encontrar o ser encontrados por posibles donantes. El registro de donantes y receptores es completamente voluntario y la plataforma permite decidir si se quiere que la información de registro (nombre, número de contacto, ciudad, tipo de plasma y foto) sean públicos o no. Las personas que se registren tienen la opción de quitar sus datos de la plataforma.</p>
+
+      <p>donatuplasma.org no hará uso alguno de los datos disponibles, se considera esos datos de dominio público, como los publicados en Redes Sociales como Facebook</p>
+
+      <p>donatuplasma.org revisará de manera periódica las imágenes que se suben en el registro de receptores. Si bien no se responsabiliza por el contenido, se reserva el derecho de quitar la imagen si la considerara inapropiada.</p>
+
+      <p>donatuplasma.org realizar&aacute; la destrucci&oacute;n de informaci&oacute;n que sea almacenada en nuestros servidores al finalizar esta pandemia</p>
+
+      <p>donatuplasma.org no se reponsabiliza por el uso de la informaci&oacute;n que terceros puedan obtener de esta plataforma</p>
+
+      <p>donatuplasma.org y Fundación Naira <b>NO</b> se hacen responsables de trámites, autorizaciones o costos en los que puedan incurrir donantes ni receptores antes, durante o después de realizar la donación de plasma</p>
+
+      <p>Puedes registrarte en dos modalidades: pública y privada. Bajo la modalidad pública, compartiremos tus datos en esta plataforma y las personas podrán verla para contactarse contigo. Puedes quitar tus datos de la lista el momento que gustes.</p>
+
+      <p>Bajo la modalidad privada, mantendremos tu información en confidencialidad y si la plataforma encuentra una correlación entre un potencial donante y receptor, la Fundación Naira colaborará en poner en contacto con ambas partes. Puedes quitar tus datos de la lista el momento que gustes.</p>
+    </div>
   </div>
 </swal>
