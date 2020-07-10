@@ -17,7 +17,7 @@ type Service interface {
 	ActivateRecipient(ctx context.Context, recipientID int64) error
 
 	CreateDonor(ctx context.Context, donor Donor) (int64, error)
-	GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error)
+	GetDonorList(ctx context.Context, publicOnly bool, q string, page int64, perPage int64) ([]Donor, int64, error)
 	UpdateDonor(ctx context.Context, donor Donor) (Donor, error)
 	VerifyDonor(ctx context.Context, donorID int64, verified bool) error
 	PublicDonor(ctx context.Context, donorID int64, public bool) error
@@ -102,12 +102,12 @@ func (s service) CreateDonor(ctx context.Context, donor Donor) (int64, error) {
 	return response, err
 }
 
-func (s service) GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error) {
+func (s service) GetDonorList(ctx context.Context, publicOnly bool, q string, page int64, perPage int64) ([]Donor, int64, error) {
 	logger := log.With(s.logger, "msg", "GetDonorList")
 
 	logger.Log("msg", "Getting Donor list")
-	response, err := s.repository.GetDonorList(ctx, publicOnly)
-	return response, err
+	response, total, err := s.repository.GetDonorList(ctx, publicOnly, q, page, perPage)
+	return response, total, err
 }
 
 func (s service) UpdateDonor(ctx context.Context, donor Donor) (Donor, error) {

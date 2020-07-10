@@ -106,6 +106,17 @@
                           </div>
                         </div>
 
+                        <div class="row">
+                          <div class="col-sm-12 col-xs-12 col-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <mat-checkbox formControlName="tandc">Acepto los T&eacute;rminos y condiciones <i class="fa fa-question-circle" (click)="openTCModal()"></i></mat-checkbox>
+                              <mat-error *ngIf="isControlHasError('city_id','requiredTrue')">
+                                <strong>Es necesario que acepte los t&eacute;rminos y condiciones</strong>
+                              </mat-error>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
 
                       <div class="col-12 col-sm-4">
@@ -164,7 +175,7 @@
                     <div class="row">
                       <div class="col-12 text-center">
                         <div class="kt-register__actions" [ngStyle]="{'margin-bottom': '0.5rem'}">
-                          <a routerLink="/" routerLinkActive="active" class="btn btn-danger mr-5">Quitarme de la lista</a>
+                          <!-- <a routerLink="/" routerLinkActive="active" class="btn btn-danger mr-5">Quitarme de la lista</a> -->
                           <a routerLink="/home" routerLinkActive="active" class="btn btn-success mr-5">Volver</a>
                           <button [disabled]="!formGroup.valid || loading || !formGroup.dirty" (click)="submit()"
                                   [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
@@ -200,5 +211,14 @@
 >
   <div *swalPortal>
     Por favor intente nuevamente en un par de segundos
+  </div>
+</swal>
+
+<swal
+    #tcModal
+    [swalOptions]="tcModalOption"
+>
+  <div *swalPortal>
+    <p>Text here</p>
   </div>
 </swal>

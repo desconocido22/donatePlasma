@@ -27,10 +27,16 @@ func makeCreateDonorEndpoint(s service.Service) endpoint.Endpoint {
 
 func makeGetDonorsEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		donors, err := s.GetDonorList(ctx, false)
+		req, ok := request.(reqres.GetDonorsRequest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		donors, total, err := s.GetDonorList(ctx, false, req.Query, req.Page, req.PerPage)
 
 		return reqres.GetDonorsResponse{
 			Donors: donors,
+			Total:  total,
 			Err:    err,
 		}, err
 	}
@@ -38,10 +44,16 @@ func makeGetDonorsEndpoint(s service.Service) endpoint.Endpoint {
 
 func makeGetPublicDonorsEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		donors, err := s.GetDonorList(ctx, true)
+		req, ok := request.(reqres.GetDonorsRequest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		donors, total, err := s.GetDonorList(ctx, true, req.Query, req.Page, req.PerPage)
 
 		return reqres.GetDonorsResponse{
 			Donors: donors,
+			Total:  total,
 			Err:    err,
 		}, err
 	}

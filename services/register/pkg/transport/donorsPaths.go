@@ -20,14 +20,14 @@ func setDonorPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 	// Get a list of all donors
 	r.Methods(http.MethodGet).Path("/api/register/donor").Handler(httptransport.NewServer(
 		endpoints.GetDonors,
-		reqres.DecodeProtectedEmptyRequest,
+		reqres.DecodePublicDonorListRequest,
 		reqres.EncodeResponse,
 	))
 
 	// Get a list of public donors
 	r.Methods(http.MethodGet).Path("/api/register/donor/public").Handler(httptransport.NewServer(
 		endpoints.GetPublicDonors,
-		reqres.DecodeEmptyRequest,
+		reqres.DecodePublicDonorListRequest,
 		reqres.EncodeResponse,
 	))
 

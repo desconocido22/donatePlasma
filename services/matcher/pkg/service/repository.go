@@ -45,8 +45,7 @@ func (repo *repository) GetRecipientList(ctx context.Context, cityID *int64, blo
 		sql = sql + " AND city_id = " + strconv.FormatInt(*cityID, 10)
 	}
 	if bloodTypeID != nil {
-		sql = sql + " AND blood_type_id IN (SELECT recipient_blood_type_id FROM compatibility WHERE donor_blood_type_id = " +
-			strconv.FormatInt(*bloodTypeID, 10) + ")"
+		sql = sql + " AND blood_type_id = " + strconv.FormatInt(*bloodTypeID, 10)
 	}
 	if q != "" {
 		sql = sql + " AND (name LIKE '%" + q + "%' OR cell_numbers LIKE '" + q + "%')"

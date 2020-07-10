@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	entities "github.com/StevenRojas/donatePlasma/services/register/pkg/service"
@@ -25,6 +26,7 @@ type CreateDonorResponse struct {
 // GetDonorsResponse Get a list of donors
 type GetDonorsResponse struct {
 	Donors []entities.Donor `json:"donors"`
+	Total  int64            `json:"total_records"`
 	Err    error            `json:"error,omitempty"`
 }
 
@@ -59,6 +61,13 @@ type DeleteDonorResquest struct {
 // ActivateDonorResquest activate donor request
 type ActivateDonorResquest struct {
 	ID int64 `json:"id,omitempty"`
+}
+
+// GetRecipientsRequest recipient list request
+type GetDonorsRequest struct {
+	Query   string
+	Page    int64
+	PerPage int64
 }
 
 // DecodeCreateDonorRequest decode create donor request
@@ -162,4 +171,45 @@ func DecodeActivateDonorRequest(ctx context.Context, r *http.Request) (interface
 	}
 	req.ID = id
 	return req, nil
+}
+
+// DecodePublicDonorListRequest decode public donor list request
+func DecodePublicDonorListRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req GetDonorsRequest
+
+	vars := r.URL.Query()
+	page, ok := getIntOrNull(vars, "page")
+	if ok {
+		req.Page = page
+	} else {
+		req.Page = 1
+	}
+	perPage, ok := getIntOrNull(vars, "per_page")
+	if ok {
+		req.PerPage = perPage
+	} else {
+		req.PerPage = 30
+	}
+
+	q, ok := vars["q"]
+	if ok {
+		req.Query = q[0]
+	}
+	return req, nil
+}
+
+func getIntOrNull(vars url.Values, field string) (int64, bool) {
+	values, ok := vars[field]
+	if ok {
+		if len(values) >= 1 {
+			value := values[0]
+			if value != "" {
+				id, err := strconv.ParseInt(value, 10, 32)
+				if err == nil {
+					return id, true
+				}
+			}
+		}
+	}
+	return 0, false
 }
