@@ -20,6 +20,9 @@ export class ReceptorsComponent implements OnInit {
   @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
   public coolModalOption: SweetAlertOptions;
 
+  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
+  public failModalOption: SweetAlertOptions;
+
   public formGroup: FormGroup;
   public list: Observable<RecipientModel[]>;
   public bloodTypes = bloodTypes;
@@ -55,6 +58,16 @@ export class ReceptorsComponent implements OnInit {
       showConfirmButton: false
     };
 
+    this.failModalOption = {
+      title: 'Eliminar Receptor',
+      type: 'warning',
+      showCloseButton: true,
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar'
+    };
+
     this.route.params.subscribe(params => {
       this.activatedRoute.queryParams.subscribe(queryParams => {
         if (queryParams.bt) {
@@ -71,6 +84,18 @@ export class ReceptorsComponent implements OnInit {
         }
         this.getAll();
       });
+    });
+  }
+
+  public deleteReceptor(receptorId: number) {
+    this.failModal.fire().then((result) => {
+      if (result.value) {
+        this.recipientService.delete(receptorId).subscribe(
+          (response) => {
+            this.getAll();
+          }
+        );
+      }
     });
   }
 
@@ -119,6 +144,7 @@ export class ReceptorsComponent implements OnInit {
         .pipe(
             map( result => {
               this.total = result.total_records;
+              console.log(this.total)
               return result.recipients;
             })
         );

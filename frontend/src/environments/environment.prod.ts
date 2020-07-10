@@ -2,9 +2,9 @@ export const environment = {
 	production: true,
 	isMockEnabled: true, // You have to switch this, when your real back-end is done
 	authTokenKey: 'authce9d77b308c149d5992a80073637e4d5',
-	api_url: 'http://localhost:8000/api/register/',
-	api_url_simple: 'http://localhost:8000',
-	api_url_match: 'http://localhost:8001/api/matcher/'
+	api_url: 'http://donatuplasma.org:8000/api/register/',
+	api_url_simple: 'http://donatuplasma.org:8000',
+	api_url_match: 'http://donatuplasma.org:8001/api/matcher/'
 };
 
 

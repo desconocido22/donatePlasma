@@ -7,6 +7,7 @@ import {DonorService} from "../../../../core/donate/services/donor.service";
 import {DonorModel} from "../../../../core/donate/models/donor.model";
 import {Router} from "@angular/router";
 import {MatSelectChange} from "@angular/material/select";
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
   selector: 'kt-donor',
@@ -20,10 +21,14 @@ export class DonorComponent implements OnInit {
   @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
   public failModalOption: SweetAlertOptions;
 
+  @ViewChild('tcModal', {static: false}) private tcModal: SwalComponent;
+  public tcModalOption: SweetAlertOptions;
+
   public formGroup: FormGroup;
   public bloodTypes = bloodTypes;
   public cities = cities;
   public loading: boolean;
+  public disabledAcceptTandC = true;
   public receptors: any[];
   public bloodTypeSelected: number;
 
@@ -51,6 +56,13 @@ export class DonorComponent implements OnInit {
       showConfirmButton: false,
       timer: 10000
     };
+
+    this.tcModalOption = {
+      title: 'Términos y condiciones',
+      type: 'info',
+      showCloseButton: false,
+      showConfirmButton: true
+    };
   }
 
 
@@ -63,7 +75,8 @@ export class DonorComponent implements OnInit {
         cell: ['', Validators.compose([Validators.required])],
         email: ['', Validators.compose([Validators.email])],
         city_id: ['', Validators.compose([])],
-        public: [true, Validators.compose([])]
+        public: [true, Validators.compose([])],
+        tandc: ['', Validators.compose([Validators.required, Validators.requiredTrue])]
       }
     );
   }
@@ -72,7 +85,6 @@ export class DonorComponent implements OnInit {
     this.bloodTypeSelected = option.value;
     this.donorService.getCanReceiveFrom(option.value).subscribe(
       (possibleDonors) => {
-        console.log(possibleDonors)
         this.receptors = possibleDonors;
       }
     );
@@ -121,5 +133,18 @@ export class DonorComponent implements OnInit {
           });
         }
     );
+  }
+
+  checkCAndT($event: MatCheckboxChange) {
+    console.log($event);
+    this.disabledAcceptTandC = $event.checked;
+  }
+
+  public openTCModal() {
+    this.tcModal.fire().then((result) => {
+      if (result.value) {
+
+      }
+    });
   }
 }
