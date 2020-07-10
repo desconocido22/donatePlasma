@@ -14,14 +14,14 @@ export class ImageDirective implements AfterViewInit {
     ngAfterViewInit(): void {
         const img = new Image();
         img.onload = () => {
-            this.setImage(this.src);
+            this.setImage('./assets/media/images/' + this.src);
         };
 
         img.onerror = () => {
             this.setImage('./assets/media/plasma/default.jpg');
         };
 
-        img.src = this.src;
+        img.src = './assets/media/images/' + this.src;
     }
 
     private setImage(src: string) {

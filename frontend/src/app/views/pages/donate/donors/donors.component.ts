@@ -10,13 +10,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SweetAlertOptions} from 'sweetalert2';
 import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 import {DonorService} from '../../../../core/donate/services/donor.service';
+import { DonorModel } from 'src/app/core/donate/models/donor.model';
 
 @Component({
-  selector: 'kt-receptors',
-  templateUrl: './receptors.component.html',
-  styleUrls: ['./receptors.component.scss']
+  selector: 'kt-donors',
+  templateUrl: './donors.component.html',
+  styleUrls: ['./donors.component.scss']
 })
-export class ReceptorsComponent implements OnInit {
+export class DonorsComponent implements OnInit {
+
   @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
   public coolModalOption: SweetAlertOptions;
 
@@ -24,7 +26,7 @@ export class ReceptorsComponent implements OnInit {
   public failModalOption: SweetAlertOptions;
 
   public formGroup: FormGroup;
-  public list: Observable<RecipientModel[]>;
+  public list: Observable<DonorModel[]>;
   public bloodTypes = bloodTypes;
   public cities = cities;
   public loading: boolean;
@@ -59,7 +61,7 @@ export class ReceptorsComponent implements OnInit {
     };
 
     this.failModalOption = {
-      title: 'Eliminar Receptor',
+      title: 'Eliminar Donador',
       type: 'warning',
       showCloseButton: true,
       showCancelButton: true,
@@ -67,30 +69,13 @@ export class ReceptorsComponent implements OnInit {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar'
     };
-
-    this.route.params.subscribe(params => {
-      this.activatedRoute.queryParams.subscribe(queryParams => {
-        if (queryParams.bt) {
-          this.bloodType = queryParams.bt;
-          this.formGroup.patchValue({
-            blood_type: this.bloodType
-          });
-        }
-        if(queryParams.city) {
-          this.city = queryParams.city;
-          this.formGroup.patchValue({
-            city: this.city
-          });
-        }
-        this.getAll();
-      });
-    });
+    this.getAll();
   }
 
   public deleteReceptor(receptorId: number) {
     this.failModal.fire().then((result) => {
       if (result.value) {
-        this.recipientService.delete(receptorId).subscribe(
+        this.donorService.delete(receptorId).subscribe(
           (response) => {
             this.getAll();
           }
@@ -99,25 +84,10 @@ export class ReceptorsComponent implements OnInit {
     });
   }
 
-  public showDonors(bloodType: any) {
-    this.donorService.getDonorsByBloodType(bloodType).subscribe(
-      (list) => {
-        this.donors = list;
-        this.bloodTypeSelected = bloodType;
-        this.coolModal.fire().then((result) => {
-          if (result.value) {
-          }
-        });
-      }
-    );
-  }
-
 
   public initRegisterFormGroup() {
     this.formGroup = this.fb.group(
       {
-        blood_type: ['0', Validators.compose([])],
-        city: ['0', Validators.compose([])],
         query: ['', Validators.compose([])]
       }
     );
@@ -127,25 +97,14 @@ export class ReceptorsComponent implements OnInit {
     this.getAll();
   }
 
-  setCity(optionSelected: MatSelectChange) {
-    // tslint:disable-next-line:radix
-    this.city = parseInt(optionSelected.value);
-    this.getAll();
-  }
-
-  setBloodType(optionSelected: MatSelectChange) {
-    // tslint:disable-next-line:radix
-    this.bloodType = parseInt(optionSelected.value);
-    this.getAll();
-  }
 
   private getAll() {
-    this.list = this.recipientService.search(this.page, this.size, this.city, this.bloodType, this.query)
+    this.list = this.donorService.search(this.page, this.size, this.city, this.bloodType, this.query)
         .pipe(
             map( result => {
               this.total = result.total_records;
               console.log(this.total)
-              return result.recipients;
+              return result.donors;
             })
         );
   }
@@ -155,4 +114,5 @@ export class ReceptorsComponent implements OnInit {
     this.page = pagination.pageIndex + 1;
     this.getAll();
   }
+
 }

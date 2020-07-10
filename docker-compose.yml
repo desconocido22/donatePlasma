@@ -23,7 +23,7 @@ services:
     container_name: frontend-dp
     restart: always
     ports:
-      - "4200:4200"
+      - "80:80"
     networks:
       - local-network
 
@@ -33,7 +33,7 @@ services:
     restart: always
     volumes: 
       - type: bind
-        source: ./services/register/static/images
+        source: ./frontend/dist/assets/media/images
         target: /frontend/static/images
     depends_on:
       - mysql-dp

@@ -92,11 +92,11 @@ export class RecipientService {
       );
   }
 
-  public delete(recipient: RecipientModel): Observable<RecipientModel> {
-    return this.http.delete<RecipientModel>(environment.api_url + 'recipient/' + recipient.id)
+  public delete(recipientId: number): Observable<any> {
+    return this.http.delete<any>(environment.api_url + `recipient/${recipientId}`)
       .pipe(
         retry(2),
-        map(response => recipient)
+        map(response => recipientId)
       );
   }
 

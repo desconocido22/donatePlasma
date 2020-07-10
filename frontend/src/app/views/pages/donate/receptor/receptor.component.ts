@@ -17,9 +17,6 @@ export class ReceptorComponent implements OnInit {
   public lastFileAdd = '';
   public pondOptions = this.optionsFile();
   @ViewChild('myPond', { static: false }) myPond: any;
-
-  public coolModalOption: SweetAlertOptions;
-  public failModalOption: SweetAlertOptions;
   public formGroup: FormGroup;
   public bloodTypes = bloodTypes;
   public cities = cities;
@@ -28,8 +25,13 @@ export class ReceptorComponent implements OnInit {
   public bloodTypeSelected: number;
 
   @ViewChild('coolModal', {static: false}) private coolModal: SwalComponent;
-  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
+  public coolModalOption: SweetAlertOptions;
 
+  @ViewChild('failModal', {static: false}) private failModal: SwalComponent;
+  public failModalOption: SweetAlertOptions;
+
+  @ViewChild('tcModal', {static: false}) private tcModal: SwalComponent;
+  public tcModalOption: SweetAlertOptions;
   constructor(
       private fb: FormBuilder,
       private recipientService: RecipientService
@@ -53,6 +55,13 @@ export class ReceptorComponent implements OnInit {
       showConfirmButton: false,
       timer: 10000
     };
+
+    this.tcModalOption = {
+      title: 'Términos y condiciones',
+      type: 'info',
+      showCloseButton: false,
+      showConfirmButton: true
+    };
   }
 
   public initRegisterFormGroup() {
@@ -63,7 +72,8 @@ export class ReceptorComponent implements OnInit {
           cell_phones: ['', Validators.compose([Validators.required])],
           email: ['', Validators.compose([Validators.email])],
           city_id: ['', Validators.compose([])],
-          public: [true, Validators.compose([])]
+          public: [true, Validators.compose([])],
+          tandc: ['', Validators.compose([Validators.required, Validators.requiredTrue])]
         }
     );
   }
@@ -168,6 +178,13 @@ export class ReceptorComponent implements OnInit {
     };
   }
 
+  public openTCModal() {
+    this.tcModal.fire().then((result) => {
+      if (result.value) {
+
+      }
+    });
+  }
   /**
    * Remove File after upload document
    * @param event filepond event

@@ -7,6 +7,6 @@ COPY . .
 FROM nginx:alpine
 COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./dist /usr/share/nginx/html
-EXPOSE 4200 4200
+EXPOSE 80 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

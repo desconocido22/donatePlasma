@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {SweetAlertOptions} from "sweetalert2";
+import Swal, {SweetAlertOptions} from "sweetalert2";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { FaqService } from 'src/app/core/donate/services/faq.service';
 
 @Component({
   selector: 'kt-faq',
@@ -17,6 +18,7 @@ export class FaqComponent implements OnInit {
   public suggestFormGroup: FormGroup;
   constructor(
       private fb: FormBuilder,
+      private faqService: FaqService
   ) {
     this.initRegisterFormGroup();
   }
@@ -53,6 +55,11 @@ export class FaqComponent implements OnInit {
   public openCoolModal(event) {
     this.coolModal.fire().then((result) => {
       if (result.value) {
+        Swal.fire(
+          'Gracias!',
+          'Nos pondremos en contacto contigo',
+          'success'
+        )
         // emit remove elemnt after delete
         // this.updateListRequest(this.vehicleSelected);
       }
@@ -66,8 +73,11 @@ export class FaqComponent implements OnInit {
   public openSuggestModel(event) {
     this.suggestModal.fire().then((result) => {
       if (result.value) {
-        // emit remove elemnt after delete
-        // this.updateListRequest(this.vehicleSelected);
+        Swal.fire(
+          'Gracias!',
+          'Muchas gracias por su sugerencia',
+          'success'
+        )
       }
     });
   }
@@ -75,7 +85,7 @@ export class FaqComponent implements OnInit {
   public initRegisterFormGroup() {
     this.coolFormGroup = this.fb.group(
         {
-          alias: ['', Validators.compose([Validators.required])],
+          alias: ['', Validators.compose([Validators.required, Validators.email])],
           comment: ['', Validators.compose([Validators.required, Validators.minLength(10)])]
         }
     );
@@ -97,6 +107,17 @@ export class FaqComponent implements OnInit {
       );
       return false;
     }
+    const postObj = this.coolFormGroup.getRawValue();
+    const response = this.faqService.recruit(postObj['alias'], postObj['comment']);
+    return new Promise((resolve, reject) => {
+      response.subscribe(
+        // tslint:disable-next-line:no-shadowed-variable
+        (response) => {
+          resolve();
+        },
+        error => reject()
+      );
+    });
   }
 
   sendSuggest() {
@@ -108,6 +129,18 @@ export class FaqComponent implements OnInit {
       );
       return false;
     }
+    const postObj = this.suggestFormGroup.getRawValue();
+    const response = this.faqService.comments(postObj['alias'], postObj['comment']);
+    return new Promise((resolve, reject) => {
+      response.subscribe(
+        // tslint:disable-next-line:no-shadowed-variable
+        (response) => {
+          resolve();
+        },
+        error => reject()
+      );
+    });
+
   }
   public isControlHasErrorCool(controlName: string, validationType: string): boolean {
     const control = this.coolFormGroup.controls[controlName];
