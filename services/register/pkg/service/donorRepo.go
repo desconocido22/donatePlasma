@@ -21,17 +21,23 @@ func (repo *repository) CreateDonor(ctx context.Context, donor Donor) (int64, er
 }
 
 // GetDonorList get a list of verified and public donors. TODO: Implement pagination
-func (repo *repository) GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error) {
+func (repo *repository) GetDonorList(ctx context.Context, publicOnly bool, q string, page int64, perPage int64) ([]Donor, int64, error) {
+	start := (page - 1) * perPage
 	var sql string
 	if publicOnly {
-		sql = `SELECT * FROM donor WHERE public = 1 and verified = 1 and deleted_at IS NULL;`
+		sql = `SELECT * FROM donor WHERE public = 1 and verified = 1 and deleted_at IS NULL`
 	} else {
-		sql = `SELECT * FROM donor;`
+		sql = `SELECT * FROM donor`
 	}
+	if q != "" {
+		sql = sql + " AND (name LIKE '%" + q + "%' OR cell LIKE '" + q + "%')"
+	}
+
+	sql = sql + " ORDER BY updated_at desc LIMIT " + strconv.FormatInt(start, 10) + ", " + strconv.FormatInt(perPage, 10)
 
 	rows, err := repo.db.QueryContext(ctx, sql)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	list := []Donor{}
 	for rows.Next() {
@@ -40,11 +46,12 @@ func (repo *repository) GetDonorList(ctx context.Context, publicOnly bool) ([]Do
 			&donor.Email, &donor.CityID, &donor.Verified, &donor.Public,
 			&donor.CreatedAt, &donor.UpdatedAt, &donor.DeletedAt)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		list = append(list, donor)
 	}
-	return list, nil
+	total, _ := repo.getTotalDonors(ctx, q)
+	return list, total, nil
 }
 
 // UpdateDonor update a donor
@@ -106,4 +113,21 @@ func (repo *repository) ActivateDonor(ctx context.Context, donorID int64) error 
 		return err
 	}
 	return nil
+}
+
+// getTotalDonors get a count of verified and public recipients
+func (repo *repository) getTotalDonors(ctx context.Context, q string) (int64, error) {
+	var sql string
+	sql = `SELECT count(id) as c FROM donor WHERE public = 1 AND verified = 1 AND deleted_at IS NULL`
+	if q != "" {
+		sql = sql + " AND (name LIKE '%" + q + "%' OR cell LIKE '" + q + "%')"
+	}
+	result, err := repo.db.QueryContext(ctx, sql)
+	if err != nil {
+		return 0, err
+	}
+	var count int64
+	result.Next()
+	err = result.Scan(&count)
+	return count, nil
 }
