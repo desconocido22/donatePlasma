@@ -18,7 +18,7 @@ type Repository interface {
 	ActivateRecipient(ctx context.Context, recipientID int64) error
 
 	CreateDonor(ctx context.Context, donor Donor) (int64, error)
-	GetDonorList(ctx context.Context, publicOnly bool) ([]Donor, error)
+	GetDonorList(ctx context.Context, publicOnly bool, q string, page int64, perPage int64) ([]Donor, int64, error)
 	UpdateDonor(ctx context.Context, donor Donor) (Donor, error)
 	VerifyDonor(ctx context.Context, donorID int64, verified bool) error
 	PublicDonor(ctx context.Context, donorID int64, public bool) error
