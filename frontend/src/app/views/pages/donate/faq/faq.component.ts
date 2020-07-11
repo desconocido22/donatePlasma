@@ -3,6 +3,7 @@ import Swal, {SweetAlertOptions} from "sweetalert2";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { FaqService } from 'src/app/core/donate/services/faq.service';
+import {Meta, Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'kt-faq',
@@ -18,9 +19,23 @@ export class FaqComponent implements OnInit {
   public suggestFormGroup: FormGroup;
   constructor(
       private fb: FormBuilder,
-      private faqService: FaqService
+      private faqService: FaqService,
+      private title: Title,
+      private meta: Meta
   ) {
     this.initRegisterFormGroup();
+    this.title.setTitle('Dona tu Plasma - Infórmate');
+    this.meta.updateTag({ name: 'charset', content: 'UTF-8' });
+    this.meta.updateTag({ name: 'description', content: 'Infórmate para saber cómo ayudar a donar o recibir plasma y salvar vidas combatiendo el COVID-19.' });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://donatuplasma.org/faq' });
+    this.meta.updateTag({ property: 'og:title', content: 'Dona tu Plasma -  Infórmate' });
+    this.meta.updateTag({ property: 'og:description', content: 'Infórmate para saber cómo ayudar a donar o recibir plasma y salvar vidas combatiendo el COVID-19.' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://donatuplasma.org/assets/media/plasma/og-imagen-faq.jpg' });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+    this.meta.updateTag({ property: 'og:image:height', content: '627' });
+    this.meta.updateTag({ property: 'og:type', content: 'article' });
+    this.meta.updateTag({ property: 'og:locale', content: 'es_ES' });
   }
 
   ngOnInit(): void {

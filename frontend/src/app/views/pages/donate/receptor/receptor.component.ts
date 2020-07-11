@@ -6,6 +6,7 @@ import {SweetAlertOptions} from 'sweetalert2';
 import {RecipientService} from '../../../../core/donate/services/recipient.service';
 import {RecipientModel} from '../../../../core/donate/models/recipient.model';
 import {MatSelectChange} from '@angular/material/select';
+import {Meta, Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'kt-receptor',
@@ -34,9 +35,23 @@ export class ReceptorComponent implements OnInit {
   public tcModalOption: SweetAlertOptions;
   constructor(
       private fb: FormBuilder,
-      private recipientService: RecipientService
+      private recipientService: RecipientService,
+      private title: Title,
+      private meta: Meta
   ) {
     this.initRegisterFormGroup();
+    this.title.setTitle('Dona tu Plasma - Regístrate si necesitas plasma');
+    this.meta.updateTag({ name: 'charset', content: 'UTF-8' });
+    this.meta.updateTag({ name: 'description', content: '¿Necesitas recibir plasma? Llena tu información aquí.' });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://donatuplasma.org/recibe' });
+    this.meta.updateTag({ property: 'og:title', content: 'Recibe Plasma' });
+    this.meta.updateTag({ property: 'og:description', content: '¿Necesitas recibir plasma? Llena tu información aquí.' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://donatuplasma.org/assets/media/plasma/og-imagen-recibe.jpg' });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+    this.meta.updateTag({ property: 'og:image:height', content: '627' });
+    this.meta.updateTag({ property: 'og:type', content: 'article' });
+    this.meta.updateTag({ property: 'og:locale', content: 'es_ES' });
   }
 
   ngOnInit(): void {

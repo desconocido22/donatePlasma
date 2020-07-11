@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SweetAlertOptions} from 'sweetalert2';
 import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 import {DonorService} from '../../../../core/donate/services/donor.service';
+import {Meta, Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'kt-receptors',
@@ -45,10 +46,23 @@ export class ReceptorsComponent implements OnInit {
     private route: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
     private recipientService: RecipientService,
-    private donorService: DonorService
+    private donorService: DonorService,
+    private title: Title,
+    private meta: Meta
   ) {
     this.initRegisterFormGroup();
-
+    this.title.setTitle('Dona tu Plasma - Lista de Receptores');
+    this.meta.updateTag({ name: 'charset', content: 'UTF-8' });
+    this.meta.updateTag({ name: 'description', content: '¿Quieres donar plasma o sabes quién podría? Recibe información sobre receptores de plasma para combatir el CODIV-19' });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://donatuplasma.org/receptores' });
+    this.meta.updateTag({ property: 'og:title', content: 'Dona tu Plasma - Lista de Receptores' });
+    this.meta.updateTag({ property: 'og:description', content: '¿Quieres donar plasma o sabes quién podría? Recibe información sobre receptores de plasma para combatir el CODIV-19' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://donatuplasma.org/assets/media/plasma/og-imagen-receptores.jpg' });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+    this.meta.updateTag({ property: 'og:image:height', content: '627' });
+    this.meta.updateTag({ property: 'og:type', content: 'article' });
+    this.meta.updateTag({ property: 'og:locale', content: 'es_ES' });
   }
 
   ngOnInit(): void {
