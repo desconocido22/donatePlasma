@@ -103,7 +103,6 @@ export class DonorsComponent implements OnInit {
         .pipe(
             map( result => {
               this.total = result.total_records;
-              console.log(this.total)
               return result.donors;
             })
         );
