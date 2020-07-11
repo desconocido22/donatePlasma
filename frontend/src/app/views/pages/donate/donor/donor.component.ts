@@ -8,6 +8,7 @@ import {DonorModel} from "../../../../core/donate/models/donor.model";
 import {Router} from "@angular/router";
 import {MatSelectChange} from "@angular/material/select";
 import {MatCheckboxChange} from "@angular/material/checkbox";
+import {Meta, Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'kt-donor',
@@ -35,9 +36,23 @@ export class DonorComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private donorService: DonorService
+    private donorService: DonorService,
+    private title: Title,
+    private meta: Meta
   ) {
     this.initRegisterFormGroup();
+    this.title.setTitle('Dona tu Plasma - Regístrate');
+    this.meta.updateTag({ name: 'charset', content: 'UTF-8' });
+    this.meta.updateTag({ name: 'description', content: '¿Quieres donar plasma? Llena tu información aquí para donar plasma.' });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://donatuplasma.org/dona' });
+    this.meta.updateTag({ property: 'og:title', content: 'Dona tu Plasma -  Llena tu información' });
+    this.meta.updateTag({ property: 'og:description', content: '¿Quieres donar plasma? Llena tu información aquí.' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://donatuplasma.org/assets/media/plasma/og-imagen-dona.jpg' });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+    this.meta.updateTag({ property: 'og:image:height', content: '627' });
+    this.meta.updateTag({ property: 'og:type', content: 'article' });
+    this.meta.updateTag({ property: 'og:locale', content: 'es_ES' });
   }
 
   ngOnInit(): void {
