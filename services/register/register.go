@@ -37,7 +37,8 @@ func main() {
 	go func() {
 		level.Info(logger).Log("msg", "Listing on port "+httpPort)
 		router := transport.NewHTTPServer(ctx, endpoints)
-		errs <- http.ListenAndServe(httpPort, handlers.CORS()(router))
+		errs <- http.ListenAndServeTLS(":8000", "/code/certs/donatuplasma.org.cer",
+			"/code/certs/donatuplasma.org.key", handlers.CORS()(router))
 	}()
 
 	go func() {
