@@ -11,6 +11,9 @@ import { locale as esLang } from './core/_config/i18n/es';
 import { locale as jpLang } from './core/_config/i18n/jp';
 import { locale as deLang } from './core/_config/i18n/de';
 import { locale as frLang } from './core/_config/i18n/fr';
+import {filter} from "rxjs/operators";
+
+declare var gtag;
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -38,6 +41,14 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private layoutConfigService: LayoutConfigService,
     private splashScreenService: SplashScreenService) {
+    const navEndEvents$ = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    );
+    navEndEvents$.subscribe((event: NavigationEnd) => {
+      gtag('config', 'UA-57867015-5', {
+        page_path: event.urlAfterRedirects
+      });
+    });
 
     // register translations
     this.translationService.loadTranslations(enLang, chLang, esLang, jpLang, deLang, frLang);
