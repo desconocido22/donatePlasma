@@ -136,7 +136,6 @@ export class DonorComponent implements OnInit {
   }
 
   checkCAndT($event: MatCheckboxChange) {
-    console.log($event);
     this.disabledAcceptTandC = $event.checked;
   }
 

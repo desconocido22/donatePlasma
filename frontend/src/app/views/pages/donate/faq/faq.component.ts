@@ -25,7 +25,7 @@ export class FaqComponent implements OnInit {
 
   ngOnInit(): void {
     this.coolModalOption = {
-      title: 'Reclutate!',
+      title: 'Quiero ser voluntario!',
       type: 'success',
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
