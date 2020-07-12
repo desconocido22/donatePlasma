@@ -53,6 +53,7 @@ func middleware(next http.Handler) http.Handler {
 		func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
 			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
 				return
 			}
 			next.ServeHTTP(w, r)

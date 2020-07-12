@@ -1,5 +1,8 @@
 FROM golang:alpine AS register
 
+RUN mkdir -p /code/certs
+COPY certs/donatuplasma.org.cer /code/certs/donatuplasma.org.cer
+COPY certs/donatuplasma.org.key /code/certs/donatuplasma.org.key
 # Working directory for build
 WORKDIR /build
 

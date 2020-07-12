@@ -16,3 +16,5 @@
 databases/mysql/data
 .DS_Store
 .angulardoc.json
+*.cer
+*.key

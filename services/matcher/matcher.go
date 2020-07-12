@@ -15,7 +15,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 )
 
 var logger log.Logger
@@ -37,7 +37,13 @@ func main() {
 	go func() {
 		level.Info(logger).Log("msg", "Listing on port "+httpPort)
 		router := transport.NewHTTPServer(ctx, endpoints)
-		errs <- http.ListenAndServe(httpPort, handlers.CORS()(router))
+		handler := cors.New(cors.Options{
+			AllowedOrigins: []string{"*"},
+			AllowedMethods: []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders: []string{"Content-Type", "Accept", "Authorization", "token"},
+		}).Handler(router)
+		errs <- http.ListenAndServeTLS(":8000", "/code/certs/donatuplasma.org.cer",
+			"/code/certs/donatuplasma.org.key", handler)
 	}()
 
 	go func() {
