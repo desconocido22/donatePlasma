@@ -140,3 +140,35 @@ func makeUploaderEndpoint(s service.Service) endpoint.Endpoint {
 		}, nil
 	}
 }
+
+func makeCommentsEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req, ok := request.(reqres.CommentsResquest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		err := s.SendComment(ctx, req.Email, req.Comment, false)
+		ok = (err == nil)
+		return reqres.OkErrorResponse{
+			Ok:  ok,
+			Err: err,
+		}, err
+	}
+}
+
+func makeRecruitEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req, ok := request.(reqres.CommentsResquest)
+		if !ok {
+			return nil, errors.New("Wrong request message")
+		}
+
+		err := s.SendComment(ctx, req.Email, req.Comment, true)
+		ok = (err == nil)
+		return reqres.OkErrorResponse{
+			Ok:  ok,
+			Err: err,
+		}, err
+	}
+}

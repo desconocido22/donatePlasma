@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"net/smtp"
+	"os"
 
 	"github.com/go-kit/kit/log"
 )
@@ -15,6 +17,7 @@ type Service interface {
 	PublicRecipient(ctx context.Context, recipientID int64, public bool) error
 	DeleteRecipient(ctx context.Context, recipientID int64) error
 	ActivateRecipient(ctx context.Context, recipientID int64) error
+	SendComment(ctx context.Context, email string, comment string, isRecluter bool) error
 
 	CreateDonor(ctx context.Context, donor Donor) (int64, error)
 	GetDonorList(ctx context.Context, publicOnly bool, q string, page int64, perPage int64) ([]Donor, int64, error)
@@ -148,4 +151,30 @@ func (s service) ActivateDonor(ctx context.Context, donorID int64) error {
 	logger.Log("msg", "Activating Donor")
 	err := s.repository.ActivateDonor(ctx, donorID)
 	return err
+}
+
+func (s service) SendComment(ctx context.Context, email string, comment string, isRecluter bool) error {
+	logger := log.With(s.logger, "msg", "SendComment")
+	var subject string
+	if isRecluter {
+		subject = "Subject: Nuevo recluta\n"
+	} else {
+		subject = "Subject: Nuevo commentario\n"
+	}
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	from, _ := os.LookupEnv("EMAIL_FROM")
+	pass, _ := os.LookupEnv("EMAIL_PASS")
+	to, _ := os.LookupEnv("EMAIL_TO")
+	body := comment + "<br><br>" + email
+	msg := "From: " + from + "\n" +
+		"To: " + to + "\n" +
+		subject + mime + body
+	err := smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+		from, []string{to}, []byte(msg))
+	if err != nil {
+		logger.Log("msg", "Error sending comment sent "+err.Error())
+	}
+	logger.Log("msg", "Comment sent")
+	return nil
 }

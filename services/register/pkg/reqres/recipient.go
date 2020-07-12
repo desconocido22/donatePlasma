@@ -76,6 +76,12 @@ type UploaderResponse struct {
 	Err      error  `json:"error,omitempty"`
 }
 
+// CommentsResquest uploader request
+type CommentsResquest struct {
+	Email   string `json:"email"`
+	Comment string `json:"comment"`
+}
+
 // DecodeCreateRecipientRequest decode create recipient request
 func DecodeCreateRecipientRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var req CreateRecipientRequest
@@ -209,5 +215,16 @@ func DecodeUploaderRequest(ctx context.Context, r *http.Request) (interface{}, e
 	tempFile.Write(fileBytes)
 
 	req.Filename = filepath.Base(tempFile.Name())
+	return req, nil
+}
+
+// DecodeCommentsRequest decode create recipient request
+func DecodeCommentsRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req CommentsResquest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
 	return req, nil
 }
