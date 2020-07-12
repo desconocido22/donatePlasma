@@ -10,7 +10,7 @@
               <form [formGroup]="formGroup" autocomplete="off" class="kt-register__form kt-form w-100"
                     [ngStyle]="{'margin': 'auto'}">
                 <div class="row">
-                  <div class="col-12 col-sm-6">
+                  <div class="col-8">
                     <div class="row">
                       <div class="col-12 text-left">
                         <h4>Buscar donadores por:</h4>
@@ -27,6 +27,9 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-4 text-right">
+                      <a routerLink="/dona" routerLinkActive="active" class="btn btn-success">Donar</a>
                   </div>
                 </div>
               </form>
