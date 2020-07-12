@@ -72,4 +72,18 @@ func setRecipientPaths(r *mux.Router, endpoints endpoints.Endpoints) {
 		reqres.DecodeUploaderRequest,
 		reqres.EncodeResponse,
 	))
+
+	// Comments endpoint
+	r.Methods(http.MethodPost).Path("/api/comments").Handler(httptransport.NewServer(
+		endpoints.Comments,
+		reqres.DecodeCommentsRequest,
+		reqres.EncodeResponse,
+	))
+
+	// Recruit endpoint
+	r.Methods(http.MethodPost).Path("/api/recruit").Handler(httptransport.NewServer(
+		endpoints.Recruit,
+		reqres.DecodeCommentsRequest,
+		reqres.EncodeResponse,
+	))
 }

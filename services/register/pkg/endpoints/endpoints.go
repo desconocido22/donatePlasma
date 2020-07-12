@@ -16,6 +16,8 @@ type Endpoints struct {
 	DeleteRecipient     endpoint.Endpoint
 	ActivateRecipient   endpoint.Endpoint
 	Uploader            endpoint.Endpoint
+	Comments            endpoint.Endpoint
+	Recruit             endpoint.Endpoint
 
 	CreateDonor     endpoint.Endpoint
 	GetDonors       endpoint.Endpoint
@@ -39,6 +41,8 @@ func MakeEndpoints(s service.Service) Endpoints {
 		DeleteRecipient:     makeDeleteRecipientEndpoint(s),
 		ActivateRecipient:   makeActivateRecipientEndpoint(s),
 		Uploader:            makeUploaderEndpoint(s),
+		Comments:            makeCommentsEndpoint(s),
+		Recruit:             makeRecruitEndpoint(s),
 
 		CreateDonor:     makeCreateDonorEndpoint(s),
 		GetDonors:       makeGetDonorsEndpoint(s),
