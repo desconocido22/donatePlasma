@@ -96,8 +96,11 @@ export class DonorService {
       );
   }
 
-  public delete(donorId: number): Observable<any> {
-    return this.http.delete<any>(environment.api_url + `donor/${donorId}`)
+  public delete(donorId: number, answere: boolean, comment: string): Observable<any> {
+    return this.http.patch<any>(environment.api_url + `donor/${donorId}`, {
+      answere,
+      comment
+    })
       .pipe(
         retry(2),
         map(response => donorId)
