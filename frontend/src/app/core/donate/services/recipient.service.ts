@@ -92,9 +92,9 @@ export class RecipientService {
       );
   }
 
-  public delete(recipientId: number, answere: boolean, comment: string): Observable<any> {
+  public delete(recipientId: number, answer: boolean, comment: string): Observable<any> {
     return this.http.patch<any>(environment.api_url + `recipient/${recipientId}`,{
-      answere,
+      answer,
       comment
     })
       .pipe(
