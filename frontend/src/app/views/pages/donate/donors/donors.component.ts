@@ -91,9 +91,9 @@ export class DonorsComponent implements OnInit, OnChanges {
   public deleteReceptor(receptorId: number) {
     this.failModal.fire().then((result) => {
       if (result.value) {
-        const answere = this.removeFormGroup.controls.answere.value?true:false;
+        const answer = this.removeFormGroup.controls.answer.value?true:false;
         this.donorService.delete(
-          receptorId, answere, this.removeFormGroup.controls.comment.value).subscribe(
+          receptorId, answer, this.removeFormGroup.controls.comment.value).subscribe(
           (response) => {
             this.removeFormGroup.reset();
             Swal.fire({
@@ -118,7 +118,7 @@ export class DonorsComponent implements OnInit, OnChanges {
       }
     );
     this.removeFormGroup = this.fb.group({
-      answere: ['', Validators.compose([])],
+      answer: ['', Validators.compose([])],
       comment: ['', Validators.compose([])],
     });
   }
